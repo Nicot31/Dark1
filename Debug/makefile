@@ -48,34 +48,34 @@ endif
 
 -include ../makefile.defs
 
-BUILD_ARTIFACT_NAME := Rob2
+BUILD_ARTIFACT_NAME := Dark1
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-Rob2.elf \
+Dark1.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-Rob2.list \
+Dark1.list \
 
 OBJCOPY_BIN += \
-Rob2.bin \
+Dark1.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: Rob2.elf secondary-outputs
+main-build: Dark1.elf secondary-outputs
 
 # Tool invocations
-Rob2.elf: $(OBJS) $(USER_OBJS) D:\STM32F4\STM32F4-Black\Rob2\STM32F407VETX_FLASH.ld
-	arm-none-eabi-g++ -o "Rob2.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\STM32F4\STM32F4-Black\Rob2\STM32F407VETX_FLASH.ld" -Wl,-Map="Rob2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Dark1.elf: $(OBJS) $(USER_OBJS) D:\STM32F4\STM32F4-Black\Dark1\STM32F407VETX_FLASH.ld
+	arm-none-eabi-g++ -o "Dark1.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\STM32F4\STM32F4-Black\Dark1\STM32F407VETX_FLASH.ld" -Wl,-Map="Dark1.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -84,13 +84,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Rob2.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Rob2.list"
+Dark1.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Dark1.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-Rob2.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Rob2.bin"
+Dark1.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "Dark1.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

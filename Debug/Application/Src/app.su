@@ -1,3 +1,3 @@
-app.cpp:19:6:void Hello()	32	static
-app.cpp:38:6:void AppInit()	24	static
-app.cpp:55:6:void AppLoop()	56	static
+app.cpp:18:6:void Hello()	24	static
+app.cpp:42:6:void AppInit()	8	static
+app.cpp:52:6:void AppLoop()	40	static

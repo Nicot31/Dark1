@@ -75,9 +75,9 @@ public:
 	void TextPutsAt(int x, int y, char *str);
 	// Draw
 	void DrawPixel(int x, int y, int color);
-	void DrawLine(int x1, int y1, int x2, int y2, int color);
-	void DrawHLine(int x1, int x2, int y, int color);
-	void DrawVLine(int x, int y1, int y2, int color);
+	void Line(int x1, int y1, int x2, int y2, int color);
+	void HLine(int x1, int x2, int y, int color);
+	void VLine(int x, int y1, int y2, int color);
 	void Rect(int x1, int y1, int x2, int y2, int color);
 	void FillRect(int x1, int y1, int x2, int y2, int color);
 	void FillScreen(int color);

@@ -387,7 +387,7 @@ void LcdScreen::DrawPixel(int x, int y, int color) {
 }
 
 /*----------------------------------------------------------------------------*/
-void LcdScreen::DrawLine(int x1, int y1, int x2, int y2, int color) {
+void LcdScreen::Line(int x1, int y1, int x2, int y2, int color) {
 	int dx, dy;
 	int stepx, stepy;
 	int fraction;
@@ -442,7 +442,7 @@ void LcdScreen::DrawLine(int x1, int y1, int x2, int y2, int color) {
 }
 
 /*----------------------------------------------------------------------------*/
-void LcdScreen::DrawHLine(int x1, int x2, int y, int color) {
+void LcdScreen::HLine(int x1, int x2, int y, int color) {
 	if (x2 < x1)
 		SWAP(x1, x2);
 	SetFrame(x1, y, x2, y);
@@ -454,7 +454,7 @@ void LcdScreen::DrawHLine(int x1, int x2, int y, int color) {
 }
 
 /*----------------------------------------------------------------------------*/
-void LcdScreen::DrawVLine(int x, int y1, int y2, int color) {
+void LcdScreen::VLine(int x, int y1, int y2, int color) {
 	if (y2 < y1)
 		SWAP(y1, y2);
 	SetFrame(x, y1, x, y2);
@@ -467,10 +467,10 @@ void LcdScreen::DrawVLine(int x, int y1, int y2, int color) {
 
 /*----------------------------------------------------------------------------*/
 void LcdScreen::Rect(int x1, int y1, int x2, int y2, int color) {
-	DrawHLine(x1, x2, y1, color);
-	DrawHLine(x1, x2, y2, color);
-	DrawVLine(x1, y1, y2, color);
-	DrawVLine(x2, y1, y2, color);
+	HLine(x1, x2, y1, color);
+	HLine(x1, x2, y2, color);
+	VLine(x1, y1, y2, color);
+	VLine(x2, y1, y2, color);
 }
 
 /*----------------------------------------------------------------------------*/
@@ -498,10 +498,10 @@ void LcdScreen::Circle(int xc, int yc, int radius, bool fill, int color) {
 
 	do {
 		if (fill) {
-			DrawHLine((xc - a), (xc + a), (yc + radius), color);
-			DrawHLine((xc - a), (xc + a), (yc - radius), color);
-			DrawHLine((xc - radius), (xc + radius), (yc + a), color);
-			DrawHLine((xc - radius), (xc + radius), (yc - a), color);
+			HLine((xc - a), (xc + a), (yc + radius), color);
+			HLine((xc - a), (xc + a), (yc - radius), color);
+			HLine((xc - radius), (xc + radius), (yc + a), color);
+			HLine((xc - radius), (xc + radius), (yc - a), color);
 		} else {
 			DrawPixel((xc + a), (yc + radius), color);
 			DrawPixel((xc + radius), (yc + a), color);

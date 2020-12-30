@@ -26,9 +26,9 @@ lcd.cpp:361:6:void LcdScreen::TextPutsAt(int, int, char*)	24	static
 lcd.cpp:367:6:void LcdScreen::GetStringSize(char*, int*, int*)	32	static
 lcd.cpp:373:6:void LcdScreen::WriteMem(uint16_t*, int)	24	static
 lcd.cpp:383:6:void LcdScreen::DrawPixel(int, int, int)	24	static
-lcd.cpp:390:6:void LcdScreen::DrawLine(int, int, int, int, int)	48	static
-lcd.cpp:445:6:void LcdScreen::DrawHLine(int, int, int, int)	40	static
-lcd.cpp:457:6:void LcdScreen::DrawVLine(int, int, int, int)	40	static
+lcd.cpp:390:6:void LcdScreen::Line(int, int, int, int, int)	48	static
+lcd.cpp:445:6:void LcdScreen::HLine(int, int, int, int)	40	static
+lcd.cpp:457:6:void LcdScreen::VLine(int, int, int, int)	40	static
 lcd.cpp:469:6:void LcdScreen::Rect(int, int, int, int, int)	32	static
 lcd.cpp:477:6:void LcdScreen::FillRect(int, int, int, int, int)	40	static
 lcd.cpp:488:6:void LcdScreen::FillScreen(int)	24	static
