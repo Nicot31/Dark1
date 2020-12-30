@@ -1,0 +1,11 @@
+touch.cpp:34:5:int TouchPenInterrupt()	8	static
+touch.cpp:42:1:TouchScreen::TouchScreen()	16	static
+touch.cpp:49:6:void TouchScreen::Reset()	32	static
+touch.cpp:65:6:void TouchScreen::SetOrientation(int, int, int)	24	static
+touch.cpp:74:5:int TouchScreen::Get(uint8_t)	32	static
+touch.cpp:90:6:void TouchScreen::GetXY(int*, int*, bool)	32	static
+touch.cpp:112:5:int TouchScreen::FastMedian(int*)	72	static
+touch.cpp:135:6:void TouchScreen::Correction(int*, int*)	24	static
+touch.cpp:159:6:void TouchScreen::GetXYMedian(int*, int*)	88	static
+touch.cpp:170:1:void __static_initialization_and_destruction_0(int, int)	16	static
+touch.cpp:170:1:cpp)	8	static
