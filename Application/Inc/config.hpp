@@ -12,26 +12,10 @@
 #define INC_CONFIG_HPP_
 
 /* Constants -----------------------------------------------------------------*/
-#define ADR0	0
-#define ADR1	1
-#define ADR2	2
-#define ADR3	3
-#define ADR4	4
-#define ADR5	5
-#define ADR6	6
-#define ADR7	7
-#define ADR8	8
-#define ADR9	9
-#define ADR10	10
-#define ADR11	11
-#define ADR12	12
-#define ADR13	13
-#define ADR14	14
-#define ADR15	15
-#define ADR16	16
-#define ADR17	17
-#define ADR18	18
-#define ADR19	19
+
+// Register cab be 0 to 19
+#define TOUCH_MIN	0   	// LOW = xMin, HIGH = yMin
+#define TOUCH_SIZE	1		// LOW = width, HIGH = height
 
 #define POS16_0	0x0000FFFF	// 16 low bits
 #define POS16_1	0xFFFF0000	// 16 High bits

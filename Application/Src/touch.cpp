@@ -10,6 +10,7 @@
 #include "main.h"
 #include "touch.hpp"
 #include "lcd.hpp"
+#include "config.hpp"
 
 /* Constants ----------------------------------------------------------------*/
 
@@ -29,20 +30,11 @@ extern SPI_HandleTypeDef hspi2;
 
 TouchScreen touch = TouchScreen();
 
-/* Function ------------------------------------------------------------------*/
-
-int TouchPenInterrupt(void) {
-	return (HAL_GPIO_ReadPin(PEN_INT_GPIO_Port, PEN_INT_Pin) == GPIO_PIN_RESET);
-}
-
 /* Methods ------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 // Constructor
 TouchScreen::TouchScreen() {
-	//orientation = LCD_LANDSCAPE_1;
-	//width = XPT2046_HOR_RES;
-	//height = XPT2046_VER_RES;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -58,8 +50,13 @@ void TouchScreen::Reset() {
 	Cmd = 0x00;
 	HAL_SPI_TransmitReceive(&hspi2, &Cmd, &Data, 1, 1000);
 	HAL_Delay(5);
-}
 
+	// read configuration
+	minXTouch = config.Read16(TOUCH_MIN, POS16_0);
+	minYTouch = config.Read16(TOUCH_MIN, POS16_1);
+	widthTouch = config.Read16(TOUCH_SIZE, POS16_0);
+	heightTouch = config.Read16(TOUCH_SIZE, POS16_1);
+}
 
 /*---------------------------------------------------------------------------*/
 void TouchScreen::SetOrientation(int w, int h, int o) {
@@ -68,7 +65,6 @@ void TouchScreen::SetOrientation(int w, int h, int o) {
 	width = w;
 	height = h;
 }
-
 
 /*---------------------------------------------------------------------------*/
 int TouchScreen::Get(uint8_t address) {
@@ -87,24 +83,13 @@ int TouchScreen::Get(uint8_t address) {
 }
 
 /*---------------------------------------------------------------------------*/
-void TouchScreen::GetXY(int *x, int *y, bool norm) {
+void TouchScreen::GetXY(int *x, int *y) {
 
 	*x = Get(XPT2046_READ_X);
 	*y = Get(XPT2046_READ_Y);
 
 	if ((orientation == LCD_LANDSCAPE_1) || (orientation == LCD_LANDSCAPE_2)) {
 		SWAP(*x, *y);
-	}
-
-	if (norm) {
-		if (*x < XPT2046_MIN)
-			*x = XPT2046_MIN;
-		else if (*x > XPT2046_MAX)
-			*x = XPT2046_MAX;
-		if (*y < XPT2046_MIN)
-			*y = XPT2046_MIN;
-		else if (*y > XPT2046_MAX)
-			*y = XPT2046_MAX;
 	}
 }
 
@@ -132,39 +117,63 @@ int TouchScreen::FastMedian(int *samples) {
 }
 
 /*---------------------------------------------------------------------------*/
-void TouchScreen::Correction(int *x, int *y) {
-	*x -= XPT2046_MIN;
-	*y -= XPT2046_MIN;
+bool TouchScreen::Correction(int *x, int *y) {
+	int a,b;
+	a=*x;
+	b=*y;
+	*x -= minXTouch;
+	*y -= minYTouch;
 
-	*x = ((*x) * width) / (XPT2046_MAX - XPT2046_MIN);
-	*y = ((*y) * height) / (XPT2046_MAX - XPT2046_MIN);
+	*x = ((*x) * width) / widthTouch;
+	*y = ((*y) * height) / heightTouch;
 
 	switch (orientation) {
-		case LCD_PORTRAIT_1:
-			*y = height - *y;
-			break;
-		case LCD_PORTRAIT_2:
-			*x = width - *x;
-			break;
-		case LCD_LANDSCAPE_1:
-			*x = width - *x;
-			*y = height - *y;
-			break;
-		case LCD_LANDSCAPE_2:
-			break;
-		}
+	case LCD_PORTRAIT_1:
+		*y = height - *y;
+		break;
+	case LCD_PORTRAIT_2:
+		*x = width - *x;
+		break;
+	case LCD_LANDSCAPE_1:
+		*x = width - *x;
+		*y = height - *y;
+		break;
+	case LCD_LANDSCAPE_2:
+		break;
+	}
+
+	if ((*x < 0) || (*y < 0) || (*x > width) || (*y > height))
+		return false;
+	return true;
 }
 
 /*---------------------------------------------------------------------------*/
-void TouchScreen::GetXYMedian(int *x, int *y) {
+bool TouchScreen::GetXYMedian(int *x, int *y) {
 	int i;
 	int tab_x[7], tab_y[7];
 
 	for (i = 0; i < 7; i++) {
-		GetXY(&tab_x[i], &tab_y[i], true);
+		GetXY(&tab_x[i], &tab_y[i]);
 	}
 
 	*x = FastMedian(tab_x);
 	*y = FastMedian(tab_y);
-	Correction(x, y);
+	return Correction(x, y);
+}
+
+/*---------------------------------------------------------------------------*/
+bool TouchScreen::IsPenDown() {
+	return (HAL_GPIO_ReadPin(PEN_INT_GPIO_Port, PEN_INT_Pin) == GPIO_PIN_RESET);
+}
+
+/*---------------------------------------------------------------------------*/
+void TouchScreen::WaitPenUp() {
+	while (IsPenDown())
+		;
+}
+
+/*---------------------------------------------------------------------------*/
+void TouchScreen::WaitPenDown() {
+	while (!IsPenDown())
+		;
 }

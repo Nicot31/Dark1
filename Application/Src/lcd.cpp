@@ -5,7 +5,7 @@
  * 						TFT LCD Driver : ILI9341
  ******************************************************************************
  */
-/* Includes ------------------------------------------------------------------*/
+/* Includes -----------------------------------------------------------------*/
 #include <string.h>
 #include <stdio.h>
 #include "stm32f4xx_hal.h"
@@ -13,8 +13,9 @@
 #include "lcd.hpp"
 #include "lcd_fonts.hpp"
 #include "touch.hpp"
+#include "config.hpp"
 
-/* Constants -----------------------------------------------------------------*/
+/* Constants ----------------------------------------------------------------*/
 // Address
 #define LCD_CMD      (*((volatile uint16_t *) 0x60000000))
 #define LCD_PARAM    (*((volatile uint16_t *) 0x60080000))
@@ -102,13 +103,17 @@
 
 #define SWAP(a,b) { int temp=(a);(a)=(b);(b)=temp; }
 
-/* Global Variables ----------------------------------------------------------*/
+/* Global Variables ---------------------------------------------------------*/
 
 LcdScreen lcd = LcdScreen();
 
-/* Methods -------------------------------------------------------------------*/
+/* --------------------------------------------------------------------------*/
+Point::Point(int px, int py) {
+	x = px;
+	y = py;
+}
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 // Constructor
 LcdScreen::LcdScreen(int orientation) {
 
@@ -119,7 +124,7 @@ LcdScreen::LcdScreen(int orientation) {
 	SetFont(Font_7x10);
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 // Private : Store the orientation for the LCD
 void LcdScreen::SetOrientation(int orientation) {
 
@@ -149,7 +154,7 @@ void LcdScreen::SetOrientation(int orientation) {
 	touch.SetOrientation(width, height, orientation);
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 // Set Text Font and Background colors
 void LcdScreen::SetColors(int font, int back) {
 	fontColor = font;
@@ -183,7 +188,7 @@ LcdFont LcdScreen::GetFont(void) {
 	return font;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::Init() {
 	LCD_CMD = LCD_RESET;
 	HAL_Delay(120);       // wait 500ms
@@ -203,7 +208,7 @@ void LcdScreen::Init() {
 	DisplayOn();
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::Orientation(int orientation) {
 	uint16_t Param;
 
@@ -231,7 +236,7 @@ void LcdScreen::Orientation(int orientation) {
 	LCD_PARAM = Param;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::SleepOn() {
 	LCD_CMD = LCD_ENTER_SLEEP_MODE;
 }
@@ -256,18 +261,18 @@ void LcdScreen::IdleModeOff() {
 	LCD_CMD = LCD_IDLE_MODE_OFF;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::Brightness(int val) {
 	LCD_CMD = LCD_W_DISP_BRIGHTNESS;
 	LCD_PARAM = (uint16_t) val & 0xFF;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::SetCursor(int x, int y) {
 	SetFrame(x, y, x, y);
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::SetFrame(int x1, int y1, int x2, int y2) {
 	LCD_CMD = LCD_COLUMN_ADDR_SET;
 	LCD_PARAM = (uint16_t) x1 >> 8;
@@ -281,9 +286,17 @@ void LcdScreen::SetFrame(int x1, int y1, int x2, int y2) {
 	LCD_PARAM = (uint16_t) y2 & 0xFF;
 }
 
-/*----------------------------------------------------------------------------*/
-/*  TEXT																	  */
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+int LcdScreen::ComposeColor(uint8_t red, uint8_t green, uint8_t blue) {
+	uint16_t co;
+	// rgb16 = red5 green6 blue5
+	co = (red >> 3) << 11 | (green >> 2) << 5 | (blue >> 3);
+	return (int) co;
+}
+
+/*---------------------------------------------------------------------------*/
+/*  TEXT																	 */
+/*---------------------------------------------------------------------------*/
 void LcdScreen::SetTextArea(int x1, int y1, int x2, int y2) {
 	txtAreaX1 = x1;
 	txtAreaY1 = y1;
@@ -293,13 +306,13 @@ void LcdScreen::SetTextArea(int x1, int y1, int x2, int y2) {
 	txtAreaPosY = y1;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::SetTextPos(int x, int y) {
 	txtAreaPosX = x;
 	txtAreaPosY = y;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 // Draw a char in the screen at the current position with the current font
 void LcdScreen::TextPutc(char c) {
 	int i, j;
@@ -340,8 +353,8 @@ void LcdScreen::TextPutc(char c) {
 	txtAreaPosX += fontWidth;
 }
 
-/*----------------------------------------------------------------------------*/
-void LcdScreen::TextPuts(char *str) {
+/*---------------------------------------------------------------------------*/
+void LcdScreen::TextPuts(const char *str) {
 	while (*str) {
 		/* New line */
 		if (*str == '\n') {
@@ -357,19 +370,49 @@ void LcdScreen::TextPuts(char *str) {
 	}
 }
 
-/*----------------------------------------------------------------------------*/
-void LcdScreen::TextPutsAt(int x, int y, char *str) {
+/*---------------------------------------------------------------------------*/
+void LcdScreen::TextPutsAt(int x, int y, const char *str) {
 	SetTextPos(x, y);
 	TextPuts(str);
 }
 
-/*----------------------------------------------------------------------------*/
-void LcdScreen::GetStringSize(char *str, int *width, int *height) {
+/*---------------------------------------------------------------------------*/
+void LcdScreen::TextPutsCenterX(int y, const char *str) {
+	int x, dummy;
+
+	lcd.GetStringSize(str, &x, &dummy);
+	x = (lcd.width - x) / 2;
+	lcd.SetTextPos(x, y);
+	lcd.TextPuts(str);
+}
+
+/*---------------------------------------------------------------------------*/
+void LcdScreen::TextPutsCenterY(int x, const char *str) {
+	int dummy, y;
+
+	lcd.GetStringSize(str, &dummy, &y);
+	y = (lcd.height - y) / 2;
+	lcd.SetTextPos(x, y);
+	lcd.TextPuts(str);
+}
+/*---------------------------------------------------------------------------*/
+void LcdScreen::TextPutsCenterXY(const char *str) {
+	int x, y;
+
+	lcd.GetStringSize(str, &x, &y);
+	x = (lcd.width - x) / 2;
+	y = (lcd.height - y) / 2;
+	lcd.SetTextPos(x, y);
+	lcd.TextPuts(str);
+}
+
+/*---------------------------------------------------------------------------*/
+void LcdScreen::GetStringSize(const char *str, int *width, int *height) {
 	*height = fontHeight;
 	*width = fontWidth * strlen(str);
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::WriteMem(uint16_t *mem, int size) {
 	LCD_CMD = LCD_MEMORY_WRITE;
 	while (size--) {
@@ -377,16 +420,16 @@ void LcdScreen::WriteMem(uint16_t *mem, int size) {
 	}
 }
 
-/*----------------------------------------------------------------------------*/
-/*  DRAW																	  */
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
+/*  DRAW																  	 */
+/*---------------------------------------------------------------------------*/
 void LcdScreen::DrawPixel(int x, int y, int color) {
 	SetCursor(x, y);
 	LCD_CMD = LCD_MEMORY_WRITE;
 	LCD_PARAM = (uint16_t) color;
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::Line(int x1, int y1, int x2, int y2, int color) {
 	int dx, dy;
 	int stepx, stepy;
@@ -441,7 +484,7 @@ void LcdScreen::Line(int x1, int y1, int x2, int y2, int color) {
 	}
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::HLine(int x1, int x2, int y, int color) {
 	if (x2 < x1)
 		SWAP(x1, x2);
@@ -453,7 +496,7 @@ void LcdScreen::HLine(int x1, int x2, int y, int color) {
 
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::VLine(int x, int y1, int y2, int color) {
 	if (y2 < y1)
 		SWAP(y1, y2);
@@ -465,7 +508,7 @@ void LcdScreen::VLine(int x, int y1, int y2, int color) {
 
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::Rect(int x1, int y1, int x2, int y2, int color) {
 	HLine(x1, x2, y1, color);
 	HLine(x1, x2, y2, color);
@@ -473,7 +516,7 @@ void LcdScreen::Rect(int x1, int y1, int x2, int y2, int color) {
 	VLine(x2, y1, y2, color);
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::FillRect(int x1, int y1, int x2, int y2, int color) {
 	uint32_t size;
 	SetFrame(x1, y1, x2, y2);
@@ -484,34 +527,27 @@ void LcdScreen::FillRect(int x1, int y1, int x2, int y2, int color) {
 	}
 }
 
-/*----------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 void LcdScreen::FillScreen(int color) {
-	FillRect(0, 0, width - 1, height - 1, color);
+	FillRect(0, 0, width, height, color);
 }
 
-/*----------------------------------------------------------------------------*/
-void LcdScreen::Circle(int xc, int yc, int radius, bool fill, int color) {
+/*---------------------------------------------------------------------------*/
+void LcdScreen::Circle(int xc, int yc, int radius, int color) {
 	int a = 0;
 	int p = 0x0000;
 
 	p = (1 - radius);
 
 	do {
-		if (fill) {
-			HLine((xc - a), (xc + a), (yc + radius), color);
-			HLine((xc - a), (xc + a), (yc - radius), color);
-			HLine((xc - radius), (xc + radius), (yc + a), color);
-			HLine((xc - radius), (xc + radius), (yc - a), color);
-		} else {
-			DrawPixel((xc + a), (yc + radius), color);
-			DrawPixel((xc + radius), (yc + a), color);
-			DrawPixel((xc - a), (yc + radius), color);
-			DrawPixel((xc - radius), (yc + a), color);
-			DrawPixel((xc + radius), (yc - a), color);
-			DrawPixel((xc + a), (yc - radius), color);
-			DrawPixel((xc - a), (yc - radius), color);
-			DrawPixel((xc - radius), (yc - a), color);
-		}
+		DrawPixel((xc + a), (yc + radius), color);
+		DrawPixel((xc + radius), (yc + a), color);
+		DrawPixel((xc - a), (yc + radius), color);
+		DrawPixel((xc - radius), (yc + a), color);
+		DrawPixel((xc + radius), (yc - a), color);
+		DrawPixel((xc + a), (yc - radius), color);
+		DrawPixel((xc - a), (yc - radius), color);
+		DrawPixel((xc - radius), (yc - a), color);
 
 		if (p < 0) {
 			p += (0x03 + (0x02 * a++));
@@ -519,5 +555,133 @@ void LcdScreen::Circle(int xc, int yc, int radius, bool fill, int color) {
 			p += (0x05 + (0x02 * ((a++) - (radius--))));
 		}
 	} while (a <= radius);
+}
+
+/*---------------------------------------------------------------------------*/
+void LcdScreen::FillCircle(int xc, int yc, int radius, int color) {
+	int a = 0;
+	int p = 0x0000;
+
+	p = (1 - radius);
+
+	do {
+		HLine((xc - a), (xc + a), (yc + radius), color);
+		HLine((xc - a), (xc + a), (yc - radius), color);
+		HLine((xc - radius), (xc + radius), (yc + a), color);
+		HLine((xc - radius), (xc + radius), (yc - a), color);
+
+		if (p < 0) {
+			p += (0x03 + (0x02 * a++));
+		} else {
+			p += (0x05 + (0x02 * ((a++) - (radius--))));
+		}
+	} while (a <= radius);
+}
+
+/*---------------------------------------------------------------------------*/
+/*  CALIBRATE																 */
+/*---------------------------------------------------------------------------*/
+void LcdScreen::DrawCrossHair(Point p, int color) {
+	Rect(p.x - 10, p.y - 10, p.x + 10, p.y + 10, color);
+	HLine(p.x - 5, p.x + 5, p.y, color);
+	VLine(p.x, p.y - 5, p.y + 5, color);
+}
+
+bool LcdScreen::ReadTestPoint(Point *p) {
+	int cpt =0;
+	int tx, sumX = 0;
+	int ty, sumY = 0;
+
+	lcd.SetFontColor(LCD_COLOR_WHITE);
+	TextPutsCenterXY("     >   PRESS   <     ");
+	touch.WaitPenDown();
+	TextPutsCenterXY("     =>  HOLD!  <=     ");
+	while ((touch.IsPenDown()) && (cpt < 5000)) {
+		touch.GetXY(&tx, &ty);
+		sumX += tx;
+		sumY += ty;
+		cpt++;
+	}
+	if (cpt < 5000)
+		return false;
+	p->x = sumX / 5000;
+	p->y = sumY / 5000;
+	TextPutsCenterXY("     ==> DONE! <==     ");
+	return true;
+}
+
+void LcdScreen::Calibrate() {
+	Point point[8];
+	Point res[8];
+	Point mesMin, mesMax;
+	int txMin, tyMin;		// Touch min
+	int tWidth, tHeight;	// Touch size
+	bool ok;
+	Config config;
+
+	Orientation(LCD_LANDSCAPE_1);
+	SetFont(Font_7x10);
+	FillScreen(LCD_COLOR_BLACK);
+	/*--------------------*/
+	/* 0       	3      	5 */
+	/*					  */
+	/* 1			   	6 */
+	/*					  */
+	/* 2		4		7 */
+	/*--------------------*/
+	point[0] = Point(10, 10);
+	point[1] = Point(10, height / 2);
+	point[2] = Point(10, height - 10);
+	point[3] = Point(width / 2, 10);
+	point[4] = Point(width / 2, height - 10);
+	point[5] = Point(width-10, 10);
+	point[6] = Point(width-10, height / 2);
+	point[7] = Point(width-10, height - 10);
+
+	// for each point
+	for (int i = 0; i < 8; i++) {
+		// draw all cross
+		for (int j = 0; j < 8; j++) {
+			DrawCrossHair(point[j],	(i == j) ? LCD_COLOR_WHITE : LCD_COLOR_GRAY);
+		}
+		// loop if error
+		do {
+			ok = ReadTestPoint(&res[i]);
+			if (!ok) {
+				SetFontColor(LCD_COLOR_RED);
+				TextPutsCenterXY("ERROR! (touch to retry)");
+				SetFontColor(LCD_COLOR_WHITE);
+				DrawCrossHair(point[i], LCD_COLOR_RED);
+				touch.WaitPenDown();
+				DrawCrossHair(point[i], LCD_COLOR_WHITE);
+				touch.WaitPenUp();
+			}
+		}while(!ok);
+		DrawCrossHair(point[i], LCD_COLOR_GREEN);
+		touch.WaitPenUp();
+	}
+	FillScreen(LCD_COLOR_BLACK);
+
+	// Compute
+	mesMin = Point((res[0].x + res[1].x + res[2].x)/3, (res[0].y + res[3].y + res[5].y)/3);
+	mesMax = Point((res[5].x + res[6].x + res[7].x)/3, (res[2].y + res[4].y + res[7].y)/3);
+	if (mesMin.x > mesMax.x)
+		SWAP(mesMin.x, mesMax.x);
+	if (mesMin.y > mesMax.y)
+		SWAP(mesMin.y, mesMax.y);
+
+	txMin = mesMin.x - (10 * (mesMax.x - mesMin.x)) / (width-20);
+	tyMin = mesMin.y - (10 * (mesMax.y - mesMin.y)) / (height-20);
+
+	tWidth = ((mesMax.x - mesMin.x) * width) / (width - 20);
+	tHeight = ((mesMax.y - mesMin.y) * height) / (height - 20);
+
+	// store configuration
+	config.Write16(TOUCH_MIN, POS16_0, (uint16_t)txMin);
+	config.Write16(TOUCH_MIN, POS16_1, (uint16_t)tyMin);
+	config.Write16(TOUCH_SIZE, POS16_0, (uint16_t)tWidth);
+	config.Write16(TOUCH_SIZE, POS16_1, (uint16_t)tHeight);
+
+	touch.Reset();
 }
 

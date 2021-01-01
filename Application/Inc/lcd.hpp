@@ -44,6 +44,15 @@
 
 
 /* Class ---------------------------------------------------------------------*/
+class Point {
+public:
+	Point(int x=0, int y=0);
+
+	int x;
+	int y;
+};
+
+
 class LcdScreen {
 public:
 	LcdScreen(int orientation = LCD_LANDSCAPE_1);
@@ -57,7 +66,7 @@ public:
 	LcdFont GetFont(void);
 	void SetTextArea(int x1, int y1, int x2, int y2);
 	void SetTextPos(int x, int y);
-	void GetStringSize(char* str, int *width, int *hight);
+	void GetStringSize(const char* str, int *width, int *hight);
 
 	// Commands
 	void Init(void);
@@ -69,10 +78,14 @@ public:
 	void IdleModeOn(void);
 	void IdleModeOff(void);
 	void Brightness(int val);
+	int  ComposeColor(uint8_t red, uint8_t green, uint8_t blue);
 	// text
 	void TextPutc(char c);
-	void TextPuts(char *str);
-	void TextPutsAt(int x, int y, char *str);
+	void TextPuts(const char *str);
+	void TextPutsAt(int x, int y, const char *str);
+	void TextPutsCenterX(int y, const char *str);
+	void TextPutsCenterY(int x, const char *str);
+	void TextPutsCenterXY(const char *str);
 	// Draw
 	void DrawPixel(int x, int y, int color);
 	void Line(int x1, int y1, int x2, int y2, int color);
@@ -81,7 +94,10 @@ public:
 	void Rect(int x1, int y1, int x2, int y2, int color);
 	void FillRect(int x1, int y1, int x2, int y2, int color);
 	void FillScreen(int color);
-	void Circle(int xc, int yc, int radius, bool fill, int color);
+	void Circle(int xc, int yc, int radius, int color);
+	void FillCircle(int xc, int yc, int radius, int color);
+
+	void Calibrate(void);
 
 
 private:
@@ -89,6 +105,9 @@ private:
 	void SetCursor(int x, int y);
 	void SetFrame(int x1, int y1, int x2, int y2);
 	void WriteMem(uint16_t *mem, int size);
+	void DrawCrossHair(Point p, int color);
+	bool ReadTestPoint(Point *p);
+
 
 
 public:

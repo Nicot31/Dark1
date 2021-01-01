@@ -11,29 +11,20 @@
 #include "board.h"
 #include "lcd.hpp"
 #include "touch.hpp"
+#include "config.hpp"
 
 /*******************************************************************************
  * Say Hello :-)
  ******************************************************************************/
 void Hello() {
-	int x, y;
-	char *msg = (char*) "Hello Thierry !";
+
+	if (KeyTest(KEY1))
+		lcd.Calibrate();
 
 	lcd.SetFont(Font_11x18);
-	lcd.GetStringSize(msg, &x, &y);
-	x = (lcd.width - x) / 2;
-	y = (lcd.height - y) / 2;
-	lcd.SetTextPos(x, y);
 	lcd.SetFontColor(LCD_COLOR_ORANGE);
-	lcd.TextPuts(msg);
+	lcd.TextPutsCenterXY("Hello Thierry !");
 	lcd.SetFontColor(LCD_COLOR_WHITE);
-
-	//lcd.Circle(100, 100, 50, false, LCD_COLOR_CYAN);
-	//lcd.Line(100, 100, 300, 200, LCD_COLOR_BROWN);
-	//for (int i = 30; i < 100; i += 10) {
-	//	lcd.HLine(10, 100, i, LCD_COLOR_GREEN);
-	//	lcd.VLine(100 + i, 10, 100, LCD_COLOR_YELLOW);
-	//}
 }
 
 /*******************************************************************************
@@ -57,24 +48,18 @@ void AppLoop() {
 	//char sMsg[30];
 
 	// display Pen Status
-	Res = TouchPenInterrupt();
+	Res = touch.IsPenDown();
 	if (Res) {
-		touch.GetXYMedian(&x, &y);
-		//sprintf(sMsg, "x=%05d, y=%05d", x, y);
-		//lcd.TextPutsAt(5, 5, sMsg);
-
-		if (penDown) {
-			lcd.Line(oldX, oldY, x, y, LCD_COLOR_MAGENTA);
-		} else {
-			penDown = true;
-			lcd.DrawPixel(x, y, LCD_COLOR_MAGENTA);
+		if (touch.GetXYMedian(&x, &y)) {
+			if (penDown) {
+				lcd.Line(oldX, oldY, x, y, LCD_COLOR_MAGENTA);
+			} else {
+				penDown = true;
+				lcd.DrawPixel(x, y, LCD_COLOR_MAGENTA);
+			}
+			oldX = x;
+			oldY = y;
 		}
-		oldX = x;
-		oldY = y;
-
-		//touch.GetXY(&x, &y, false);
-		//sprintf(sMsg, "x=%05d, y=%05d", x, y);
-		//lcd.TextPutsAt(5, 30, sMsg);
 	} else if (penDown) {
 		penDown = false;
 	}

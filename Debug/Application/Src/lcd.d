@@ -33,7 +33,7 @@ Application/Src/lcd.o: ../Application/Src/lcd.cpp \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Core/Inc/main.h ../Application/Inc/lcd.hpp \
  ../Application/Inc/lcd_fonts.hpp ../Application/Inc/lcd_fonts.hpp \
- ../Application/Inc/touch.hpp
+ ../Application/Inc/touch.hpp ../Application/Inc/config.hpp
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 
@@ -108,3 +108,5 @@ Application/Src/lcd.o: ../Application/Src/lcd.cpp \
 ../Application/Inc/lcd_fonts.hpp:
 
 ../Application/Inc/touch.hpp:
+
+../Application/Inc/config.hpp:

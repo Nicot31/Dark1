@@ -1,4 +1,5 @@
 "Application/Src/app.o"
+"Application/Src/config.o"
 "Application/Src/lcd.o"
 "Application/Src/lcd_fonts.o"
 "Application/Src/touch.o"

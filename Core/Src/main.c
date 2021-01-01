@@ -18,13 +18,13 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include <app.hpp>
 #include "main.h"
-#include "board.h"
 #include "cmsis_os.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "board.h"
+#include "app.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -523,9 +523,9 @@ void StartBlinkTask(void *argument)
   for(;;)
   {
 	  LedToggle(LED2);
-	  osDelay(100);
+	  osDelay(50);
 	  LedToggle(LED2);
-	  osDelay(900);
+	  osDelay(950);
   }
   /* USER CODE END StartBlinkTask */
 }

@@ -20,25 +20,31 @@ public:
 
 	void Reset(void);
 	void SetOrientation(int w, int h, int o);
-	void GetXY(int *x, int *y, bool raw);
-	void GetXYMedian(int *x, int *y);
+	void GetXY(int *x, int *y);
+	bool GetXYMedian(int *x, int *y);
+	bool IsPenDown();
+	void WaitPenUp();
+	void WaitPenDown();
 
 private:
 	int Get(uint8_t address);
 	int FastMedian(int *samples);
-	void Correction(int *x, int *y);
+	bool Correction(int *x, int *y);
 
 public:
+	// screen
 	int orientation;
 	int width;
 	int height;
-	int minX, maxX;
-	int minY, maxY;
+	// touch
+	int minXTouch;
+	int minYTouch;
+	int widthTouch;
+	int heightTouch;
 };
 
 
 /* Variables ----------------------------------------------------------------*/
-extern int TouchPenInterrupt(void);
 extern TouchScreen touch;
 
 
