@@ -1,3 +1,0 @@
-lcd_fonts.cpp:308:1:LcdFont::LcdFont(int, int, const uint16_t*)	24	static
-lcd_fonts.cpp:316:48:void __static_initialization_and_destruction_0(int, int)	16	static
-lcd_fonts.cpp:316:48:cpp)	8	static

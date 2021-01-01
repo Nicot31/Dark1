@@ -1,6 +1,0 @@
-board.c:18:6:LedSet	16	static
-board.c:27:6:LedOn	16	static
-board.c:36:6:LedOff	16	static
-board.c:45:6:LedToggle	16	static
-board.c:54:5:KeyTest	24	static
-board.c:73:6:Delay	24	static
