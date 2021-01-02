@@ -18,17 +18,29 @@
 
 /* Methods ------------------------------------------------------------------*/
 Button::Button(Point p, int width, int height, int backClr, int borderClr,
-		int borderSz, const char *txt, int txtClr, LcdFont ft) {
+		int borderSz, const char *txt, int textClr, LcdFont ft) {
 
 	rect = Rectangle(p, width, height);
 	backColor = backClr;
 	borderColor = borderClr;
 	borderSize = borderSz;
-	txtColor = txtClr;
+	textColor = textClr;
 	label = (char *)txt;
 	font = ft;
 }
 
+/*---------------------------------------------------------------------------*/
+void Button::SetColor(int back, int border, int text) {
+	// COLOR_NONE to keep unchanged
+	if (back != COLOR_NONE)
+		backColor = back;
+	if (border != COLOR_NONE)
+		borderColor = border;
+	if (text != COLOR_NONE)
+		textColor = text;
+}
+
+/*---------------------------------------------------------------------------*/
 void Button::Draw() {
 	lcd.FillRect(rect, backColor);
 	lcd.Rect(rect, borderColor);
@@ -36,7 +48,7 @@ void Button::Draw() {
 		lcd.Rect(rect.p1.x+i, rect.p1.y+i, rect.p2.x-i, rect.p2.y-i, borderColor);
 	}
 	if (strlen(label) > 0) {
-		lcd.SetFontColor(txtColor);
+		lcd.SetFontColor(textColor);
 		lcd.SetBackColor(backColor);
 		lcd.SetFont(font);
 		lcd.TextPutsCenterRect(rect, label);

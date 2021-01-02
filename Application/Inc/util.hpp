@@ -21,6 +21,7 @@ public:
 	void Add(int width, int height);
 	Point Shift(int x, int y);
 
+	// Attributes
 	int x;
 	int y;
 };
@@ -35,6 +36,7 @@ public:
 	bool IsPointInside(int x, int y);
 	bool IsPointInside(Point p);
 
+	// Attributes
 	Point p1;
 	Point p2;
 	int width;

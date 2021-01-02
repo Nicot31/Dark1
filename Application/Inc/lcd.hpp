@@ -26,20 +26,21 @@
 #define LCD_PORTRAIT_2			3
 
 // Colors
-#define LCD_COLOR_WHITE			0xFFFF
-#define LCD_COLOR_BLACK			0x0000
-#define LCD_COLOR_RED           0xF800
-#define LCD_COLOR_GREEN			0x07E0
-#define LCD_COLOR_GREEN2		0xB723
-#define LCD_COLOR_BLUE			0x001F
-#define LCD_COLOR_BLUE2			0x051D
-#define LCD_COLOR_YELLOW		0xFFE0
-#define LCD_COLOR_ORANGE		0xFBE4
-#define LCD_COLOR_CYAN			0x07FF
-#define LCD_COLOR_MAGENTA		0xA254
-#define LCD_COLOR_GRAY			0x39E7
-#define LCD_COLOR_GRAY2			0x7BEF
-#define LCD_COLOR_BROWN			0xBBCA
+#define COLOR_NONE			-1
+#define COLOR_WHITE			0xFFFF
+#define COLOR_BLACK			0x0000
+#define COLOR_RED           0xF800
+#define COLOR_GREEN			0x07E0
+#define COLOR_GREEN2		0xB723
+#define COLOR_BLUE			0x001F
+#define COLOR_BLUE2			0x051D
+#define COLOR_YELLOW		0xFFE0
+#define COLOR_ORANGE		0xFBE4
+#define COLOR_CYAN			0x07FF
+#define COLOR_MAGENTA		0xA254
+#define COLOR_GRAY			0x39E7
+#define COLOR_GRAY2			0x7BEF
+#define COLOR_BROWN			0xBBCA
 
 // Transparent background, only for strings and chars
 #define LCD_TRANSPARENT			0x80000000

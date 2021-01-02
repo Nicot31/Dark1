@@ -112,10 +112,10 @@ LcdScreen lcd = LcdScreen();
 // Constructor
 LcdScreen::LcdScreen(int orientation) {
 
-	fontColor = LCD_COLOR_WHITE;
-	backgroundColor = LCD_COLOR_BLACK;
+	fontColor = COLOR_WHITE;
+	backgroundColor = COLOR_BLACK;
 	SetOrientation(orientation);
-	SetColors(LCD_COLOR_WHITE, LCD_COLOR_BLACK);
+	SetColors(COLOR_WHITE, COLOR_BLACK);
 	SetFont(Font_7x10);
 }
 
@@ -198,7 +198,7 @@ void LcdScreen::Init() {
 	SetFont(Font_7x10);
 
 	SetTextArea(0, 0, width, height);
-	FillScreen(LCD_COLOR_BLACK);
+	FillScreen(COLOR_BLACK);
 
 	DisplayOn();
 }
@@ -616,7 +616,7 @@ bool LcdScreen::ReadTestPoint(Point *p) {
 	int tx, sumX = 0;
 	int ty, sumY = 0;
 
-	lcd.SetFontColor(LCD_COLOR_WHITE);
+	lcd.SetFontColor(COLOR_WHITE);
 	TextPutsCenterXY("     >   PRESS   <     ");
 	touch.WaitPenDown();
 	TextPutsCenterXY("     =>  HOLD!  <=     ");
@@ -645,7 +645,7 @@ void LcdScreen::Calibrate() {
 
 	Orientation(LCD_LANDSCAPE_1);
 	SetFont(Font_7x10);
-	FillScreen(LCD_COLOR_BLACK);
+	FillScreen(COLOR_BLACK);
 	/*--------------------*/
 	/* 0       	3      	5 */
 	/*					  */
@@ -667,25 +667,25 @@ void LcdScreen::Calibrate() {
 		// draw all cross
 		for (int j = 0; j < 8; j++) {
 			DrawCrossHair(point[j],
-					(i == j) ? LCD_COLOR_WHITE : LCD_COLOR_GRAY);
+					(i == j) ? COLOR_WHITE : COLOR_GRAY);
 		}
 		// loop if error
 		do {
 			ok = ReadTestPoint(&res[i]);
 			if (!ok) {
-				SetFontColor(LCD_COLOR_RED);
+				SetFontColor(COLOR_RED);
 				TextPutsCenterXY("ERROR! (touch to retry)");
-				SetFontColor(LCD_COLOR_WHITE);
-				DrawCrossHair(point[i], LCD_COLOR_RED);
+				SetFontColor(COLOR_WHITE);
+				DrawCrossHair(point[i], COLOR_RED);
 				touch.WaitPenDown();
-				DrawCrossHair(point[i], LCD_COLOR_WHITE);
+				DrawCrossHair(point[i], COLOR_WHITE);
 				touch.WaitPenUp();
 			}
 		} while (!ok);
-		DrawCrossHair(point[i], LCD_COLOR_GREEN);
+		DrawCrossHair(point[i], COLOR_GREEN);
 		touch.WaitPenUp();
 	}
-	FillScreen(LCD_COLOR_BLACK);
+	FillScreen(COLOR_BLACK);
 
 // Compute
 	mesMin = Point((res[0].x + res[1].x + res[2].x) / 3,
