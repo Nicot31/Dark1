@@ -14,6 +14,7 @@
 #include "lcd_fonts.hpp"
 #include "touch.hpp"
 #include "config.hpp"
+#include "util.hpp"
 
 /* Constants ----------------------------------------------------------------*/
 // Address
@@ -106,12 +107,6 @@
 /* Global Variables ---------------------------------------------------------*/
 
 LcdScreen lcd = LcdScreen();
-
-/* --------------------------------------------------------------------------*/
-Point::Point(int px, int py) {
-	x = px;
-	y = py;
-}
 
 /*---------------------------------------------------------------------------*/
 // Constructor
@@ -337,17 +332,17 @@ void LcdScreen::TextPutc(char c) {
 	// Draw char data
 	pData = (uint16_t*) fontData + (fontHeight * c);
 	LCD_CMD = LCD_MEMORY_WRITE;
-	for (i = 0; i < fontHeight; i++) {
-		Data = *pData++;
-		for (j = 0; j < fontWidth; j++) {
-			if (Data & 0x8000) {
-				LCD_PARAM = (uint16_t) fontColor;
-			} else {
-				LCD_PARAM = (uint16_t) backgroundColor;
-			}
-			Data <<= 1;
-		}
-	}
+		for (i = 0; i < fontHeight; i++) {
+			Data = *pData++;
+			for (j = 0; j < fontWidth; j++) {
+				if (Data & 0x8000) {
+					LCD_PARAM = (uint16_t) fontColor;
+				} else {
+					LCD_PARAM = (uint16_t) backgroundColor;
+				}
+				Data <<= 1;
+			} // End for j
+		} // End for i
 
 	// Update Text Pointer
 	txtAreaPosX += fontWidth;
@@ -395,6 +390,7 @@ void LcdScreen::TextPutsCenterY(int x, const char *str) {
 	lcd.SetTextPos(x, y);
 	lcd.TextPuts(str);
 }
+
 /*---------------------------------------------------------------------------*/
 void LcdScreen::TextPutsCenterXY(const char *str) {
 	int x, y;
@@ -404,6 +400,18 @@ void LcdScreen::TextPutsCenterXY(const char *str) {
 	y = (lcd.height - y) / 2;
 	lcd.SetTextPos(x, y);
 	lcd.TextPuts(str);
+}
+
+/*---------------------------------------------------------------------------*/
+void LcdScreen::TextPutsCenterRect(Rectangle rect, const char *str) {
+	int x, y;
+
+	lcd.GetStringSize(str, &x, &y);
+	x = (rect.width - x) / 2 + rect.p1.x;
+	y = (rect.height - y) / 2 + rect.p1.y;
+	lcd.SetTextPos(x, y);
+	lcd.TextPuts(str);
+
 }
 
 /*---------------------------------------------------------------------------*/
@@ -516,15 +524,31 @@ void LcdScreen::Rect(int x1, int y1, int x2, int y2, int color) {
 	VLine(x2, y1, y2, color);
 }
 
+void LcdScreen::Rect(Point &p1, Point &p2, int color) {
+	Rect(p1.x, p1.y, p2.x, p2.y, color);
+}
+
+void LcdScreen::Rect(Rectangle &rect, int color) {
+	Rect(rect.p1.x, rect.p1.y, rect.p2.x, rect.p2.y, color);
+}
+
 /*---------------------------------------------------------------------------*/
 void LcdScreen::FillRect(int x1, int y1, int x2, int y2, int color) {
 	uint32_t size;
 	SetFrame(x1, y1, x2, y2);
-	size = (x2 - x1) * (y2 - y1);
+	size = (x2 - x1 + 1) * (y2 - y1 + 1);
 	LCD_CMD = LCD_MEMORY_WRITE;
 	while (size--) {
 		LCD_PARAM = (uint16_t) color;
 	}
+}
+
+void LcdScreen::FillRect(Point &p1, Point &p2, int color) {
+	FillRect(p1.x, p1.y, p2.x, p2.y, color);
+}
+
+void LcdScreen::FillRect(Rectangle &rect, int color) {
+	FillRect(rect.p1.x, rect.p1.y, rect.p2.x, rect.p2.y, color);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -581,14 +605,14 @@ void LcdScreen::FillCircle(int xc, int yc, int radius, int color) {
 /*---------------------------------------------------------------------------*/
 /*  CALIBRATE																 */
 /*---------------------------------------------------------------------------*/
-void LcdScreen::DrawCrossHair(Point p, int color) {
+void LcdScreen::DrawCrossHair(Point &p, int color) {
 	Rect(p.x - 10, p.y - 10, p.x + 10, p.y + 10, color);
 	HLine(p.x - 5, p.x + 5, p.y, color);
 	VLine(p.x, p.y - 5, p.y + 5, color);
 }
 
 bool LcdScreen::ReadTestPoint(Point *p) {
-	int cpt =0;
+	int cpt = 0;
 	int tx, sumX = 0;
 	int ty, sumY = 0;
 
@@ -634,15 +658,16 @@ void LcdScreen::Calibrate() {
 	point[2] = Point(10, height - 10);
 	point[3] = Point(width / 2, 10);
 	point[4] = Point(width / 2, height - 10);
-	point[5] = Point(width-10, 10);
-	point[6] = Point(width-10, height / 2);
-	point[7] = Point(width-10, height - 10);
+	point[5] = Point(width - 10, 10);
+	point[6] = Point(width - 10, height / 2);
+	point[7] = Point(width - 10, height - 10);
 
-	// for each point
+// for each point
 	for (int i = 0; i < 8; i++) {
 		// draw all cross
 		for (int j = 0; j < 8; j++) {
-			DrawCrossHair(point[j],	(i == j) ? LCD_COLOR_WHITE : LCD_COLOR_GRAY);
+			DrawCrossHair(point[j],
+					(i == j) ? LCD_COLOR_WHITE : LCD_COLOR_GRAY);
 		}
 		// loop if error
 		do {
@@ -656,31 +681,33 @@ void LcdScreen::Calibrate() {
 				DrawCrossHair(point[i], LCD_COLOR_WHITE);
 				touch.WaitPenUp();
 			}
-		}while(!ok);
+		} while (!ok);
 		DrawCrossHair(point[i], LCD_COLOR_GREEN);
 		touch.WaitPenUp();
 	}
 	FillScreen(LCD_COLOR_BLACK);
 
-	// Compute
-	mesMin = Point((res[0].x + res[1].x + res[2].x)/3, (res[0].y + res[3].y + res[5].y)/3);
-	mesMax = Point((res[5].x + res[6].x + res[7].x)/3, (res[2].y + res[4].y + res[7].y)/3);
+// Compute
+	mesMin = Point((res[0].x + res[1].x + res[2].x) / 3,
+			(res[0].y + res[3].y + res[5].y) / 3);
+	mesMax = Point((res[5].x + res[6].x + res[7].x) / 3,
+			(res[2].y + res[4].y + res[7].y) / 3);
 	if (mesMin.x > mesMax.x)
 		SWAP(mesMin.x, mesMax.x);
 	if (mesMin.y > mesMax.y)
 		SWAP(mesMin.y, mesMax.y);
 
-	txMin = mesMin.x - (10 * (mesMax.x - mesMin.x)) / (width-20);
-	tyMin = mesMin.y - (10 * (mesMax.y - mesMin.y)) / (height-20);
+	txMin = mesMin.x - (10 * (mesMax.x - mesMin.x)) / (width - 20);
+	tyMin = mesMin.y - (10 * (mesMax.y - mesMin.y)) / (height - 20);
 
 	tWidth = ((mesMax.x - mesMin.x) * width) / (width - 20);
 	tHeight = ((mesMax.y - mesMin.y) * height) / (height - 20);
 
-	// store configuration
-	config.Write16(TOUCH_MIN, POS16_0, (uint16_t)txMin);
-	config.Write16(TOUCH_MIN, POS16_1, (uint16_t)tyMin);
-	config.Write16(TOUCH_SIZE, POS16_0, (uint16_t)tWidth);
-	config.Write16(TOUCH_SIZE, POS16_1, (uint16_t)tHeight);
+// store configuration
+	config.Write16(TOUCH_MIN, POS16_0, (uint16_t) txMin);
+	config.Write16(TOUCH_MIN, POS16_1, (uint16_t) tyMin);
+	config.Write16(TOUCH_SIZE, POS16_0, (uint16_t) tWidth);
+	config.Write16(TOUCH_SIZE, POS16_1, (uint16_t) tHeight);
 
 	touch.Reset();
 }

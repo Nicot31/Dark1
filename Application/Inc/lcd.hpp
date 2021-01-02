@@ -10,6 +10,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "lcd_fonts.hpp"
+#include "util.hpp"
 
 /* Constants -----------------------------------------------------------------*/
 
@@ -36,7 +37,8 @@
 #define LCD_COLOR_ORANGE		0xFBE4
 #define LCD_COLOR_CYAN			0x07FF
 #define LCD_COLOR_MAGENTA		0xA254
-#define LCD_COLOR_GRAY			0x7BEF
+#define LCD_COLOR_GRAY			0x39E7
+#define LCD_COLOR_GRAY2			0x7BEF
 #define LCD_COLOR_BROWN			0xBBCA
 
 // Transparent background, only for strings and chars
@@ -44,14 +46,6 @@
 
 
 /* Class ---------------------------------------------------------------------*/
-class Point {
-public:
-	Point(int x=0, int y=0);
-
-	int x;
-	int y;
-};
-
 
 class LcdScreen {
 public:
@@ -86,13 +80,18 @@ public:
 	void TextPutsCenterX(int y, const char *str);
 	void TextPutsCenterY(int x, const char *str);
 	void TextPutsCenterXY(const char *str);
+	void TextPutsCenterRect(Rectangle rect, const char * str);
 	// Draw
 	void DrawPixel(int x, int y, int color);
 	void Line(int x1, int y1, int x2, int y2, int color);
 	void HLine(int x1, int x2, int y, int color);
 	void VLine(int x, int y1, int y2, int color);
 	void Rect(int x1, int y1, int x2, int y2, int color);
+	void Rect(Point& p1, Point& p2, int color);
+	void Rect(Rectangle& rec, int color);
 	void FillRect(int x1, int y1, int x2, int y2, int color);
+	void FillRect(Point& p1, Point& p2, int color);
+	void FillRect(Rectangle& rec, int color);
 	void FillScreen(int color);
 	void Circle(int xc, int yc, int radius, int color);
 	void FillCircle(int xc, int yc, int radius, int color);
@@ -105,7 +104,7 @@ private:
 	void SetCursor(int x, int y);
 	void SetFrame(int x1, int y1, int x2, int y2);
 	void WriteMem(uint16_t *mem, int size);
-	void DrawCrossHair(Point p, int color);
+	void DrawCrossHair(Point& p, int color);
 	bool ReadTestPoint(Point *p);
 
 

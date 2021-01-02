@@ -18,6 +18,7 @@
 
 class LcdFont {
 public:
+	LcdFont();
 	LcdFont(int width, int height, const uint16_t *data);
 
 	int 	width;  	// Font width in pixels

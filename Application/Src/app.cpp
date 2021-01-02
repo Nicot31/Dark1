@@ -12,6 +12,8 @@
 #include "lcd.hpp"
 #include "touch.hpp"
 #include "config.hpp"
+#include "util.hpp"
+#include "button.hpp"
 
 /*******************************************************************************
  * Say Hello :-)
@@ -22,9 +24,14 @@ void Hello() {
 		lcd.Calibrate();
 
 	lcd.SetFont(Font_11x18);
-	lcd.SetFontColor(LCD_COLOR_ORANGE);
-	lcd.TextPutsCenterXY("Hello Thierry !");
 	lcd.SetFontColor(LCD_COLOR_WHITE);
+
+	//lcd.SetFontColor(LCD_COLOR_ORANGE);
+	//lcd.TextPutsCenterXY("Hello Thierry !");
+	Button btn = Button(Point(50, 50), 70, 30, LCD_COLOR_BLUE2, LCD_COLOR_BLUE, 2, "Test", LCD_COLOR_BLACK, Font_11x18);
+	btn.Draw();
+	btn = Button(Point(150, 50), 70, 30, LCD_COLOR_GRAY2, LCD_COLOR_GRAY, 2, "Go", LCD_COLOR_WHITE, Font_11x18);
+	btn.Draw();
 }
 
 /*******************************************************************************

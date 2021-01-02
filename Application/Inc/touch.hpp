@@ -9,6 +9,7 @@
 #ifndef INC_TOUCH_HPP_
 #define INC_TOUCH_HPP_
 
+#include "util.hpp"
 
 /* Constants ----------------------------------------------------------------*/
 
@@ -22,6 +23,7 @@ public:
 	void SetOrientation(int w, int h, int o);
 	void GetXY(int *x, int *y);
 	bool GetXYMedian(int *x, int *y);
+	bool GetXYMedian(Point& p);
 	bool IsPenDown();
 	void WaitPenUp();
 	void WaitPenDown();
@@ -32,13 +34,13 @@ private:
 	bool Correction(int *x, int *y);
 
 public:
-	// screen
 	int orientation;
-	int width;
-	int height;
+	// screen
+	int widthLCD;
+	int heightLCD;
 	// touch
-	int minXTouch;
-	int minYTouch;
+	int xOffsetTouch;
+	int yOffsetTouch;
 	int widthTouch;
 	int heightTouch;
 };

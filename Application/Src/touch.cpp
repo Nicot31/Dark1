@@ -52,8 +52,8 @@ void TouchScreen::Reset() {
 	HAL_Delay(5);
 
 	// read configuration
-	minXTouch = config.Read16(TOUCH_MIN, POS16_0);
-	minYTouch = config.Read16(TOUCH_MIN, POS16_1);
+	xOffsetTouch = config.Read16(TOUCH_MIN, POS16_0);
+	yOffsetTouch = config.Read16(TOUCH_MIN, POS16_1);
 	widthTouch = config.Read16(TOUCH_SIZE, POS16_0);
 	heightTouch = config.Read16(TOUCH_SIZE, POS16_1);
 }
@@ -62,8 +62,8 @@ void TouchScreen::Reset() {
 void TouchScreen::SetOrientation(int w, int h, int o) {
 
 	orientation = o;
-	width = w;
-	height = h;
+	widthLCD = w;
+	heightLCD = h;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -118,31 +118,28 @@ int TouchScreen::FastMedian(int *samples) {
 
 /*---------------------------------------------------------------------------*/
 bool TouchScreen::Correction(int *x, int *y) {
-	int a,b;
-	a=*x;
-	b=*y;
-	*x -= minXTouch;
-	*y -= minYTouch;
+	*x -= xOffsetTouch;
+	*y -= yOffsetTouch;
 
-	*x = ((*x) * width) / widthTouch;
-	*y = ((*y) * height) / heightTouch;
+	*x = ((*x) * widthLCD) / widthTouch;
+	*y = ((*y) * heightLCD) / heightTouch;
 
 	switch (orientation) {
 	case LCD_PORTRAIT_1:
-		*y = height - *y;
+		*y = heightLCD - *y;
 		break;
 	case LCD_PORTRAIT_2:
-		*x = width - *x;
+		*x = widthLCD - *x;
 		break;
 	case LCD_LANDSCAPE_1:
-		*x = width - *x;
-		*y = height - *y;
+		*x = widthLCD - *x;
+		*y = heightLCD - *y;
 		break;
 	case LCD_LANDSCAPE_2:
 		break;
 	}
 
-	if ((*x < 0) || (*y < 0) || (*x > width) || (*y > height))
+	if ((*x < 0) || (*y < 0) || (*x > widthLCD) || (*y > heightLCD))
 		return false;
 	return true;
 }
@@ -159,6 +156,11 @@ bool TouchScreen::GetXYMedian(int *x, int *y) {
 	*x = FastMedian(tab_x);
 	*y = FastMedian(tab_y);
 	return Correction(x, y);
+}
+
+/*---------------------------------------------------------------------------*/
+bool TouchScreen::GetXYMedian(Point& p) {
+	return GetXYMedian(&p.x, &p.y);
 }
 
 /*---------------------------------------------------------------------------*/
