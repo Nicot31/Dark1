@@ -15,6 +15,7 @@ and the Application part uses C++.
 ### Modules
 Name  | Description
 ----- | -----------
-*LCD* | This class contains the LCD commands, the graphics functions and the text printing
-*TOUCH* | Touch screen management with pen Up/Down detection and position
-*BUTTON*| To display a button and detect the click
+*LCD* | This class contains the LCD commands, the graphics functions and the text printing.
+*TOUCH* | Touch screen management with pen Up/Down detection and position. This module include the touch screen calibration.
+*BUTTON*| To display a button and detect the click.
+*CONFIG* | Allows to store and read value in the SRAM (RTC register). Usefull to keep touch screen configuration after power off.
