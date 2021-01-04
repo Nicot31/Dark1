@@ -16,20 +16,58 @@
 /* Constants ----------------------------------------------------------------*/
 
 /* Global Variables ---------------------------------------------------------*/
+int Button::defaultBackColor = COLOR_GRAY;
+int Button::defaultBorderColor = COLOR_GRAY2;
+int Button::defaultTextColor = COLOR_WHITE;
+int Button::defaultBackColorActif = COLOR_GRAY2;
+int Button::defaultBorderColorActif = COLOR_GRAY;
+int Button::defaultTextColorActif = COLOR_WHITE;
+int Button::defaultBorderSize = 2;
+LcdFont Button::defaultFont = LcdFont(0, 0, 0);		// will be initialized in Frame constructor
 
 /* Methods ------------------------------------------------------------------*/
-Button::Button(Point p, int width, int height, int backClr, int borderClr,
-		int borderSz, const char *txt, int textClr, LcdFont ft) {
+Button::Button(int id, Point p, int width, int height, const char *txt) : Item() {
 
+	ID = id;
 	rect = Rectangle(p, width, height);
-	backColor = backColorActif = backClr;
-	borderColor = borderColorActif = borderClr;
-	textColor = textColorActif = textClr;
-	borderSize = borderSz;
+	backColor = defaultBackColor;
+	backColorActif = defaultBackColorActif;
+	borderColor = defaultBorderColor;
+	borderColorActif = defaultBorderColorActif;
+	textColor = defaultTextColor;
+	textColorActif = defaultTextColorActif;
+	borderSize = defaultBorderSize;
 	label = (char *)txt;
-	font = ft;
-	fEnable = true;
-	fActif = false;
+	font = defaultFont;
+}
+
+/*---------------------------------------------------------------------------*/
+void Button::SetDefaultColor(int back, int border, int text) {
+	// COLOR_NONE to keep unchanged
+	if (back != COLOR_NONE)
+		defaultBackColor = back;
+	if (border != COLOR_NONE)
+		defaultBorderColor = border;
+	if (text != COLOR_NONE)
+		defaultTextColor = text;
+}
+
+void Button::SetDefaultColorActif(int back, int border, int text) {
+	// COLOR_NONE to keep unchanged
+	if (back != COLOR_NONE)
+		defaultBackColorActif = back;
+	if (border != COLOR_NONE)
+		defaultBorderColorActif = border;
+	if (text != COLOR_NONE)
+		defaultTextColorActif = text;
+}
+
+void Button::SetDefaultBorderSize(int size) {
+	defaultBorderSize = size;
+}
+
+void Button::SetDefaultFont(LcdFont ft) {
+	defaultFont = ft;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -52,6 +90,11 @@ void Button::SetColorActif(int back, int border, int text) {
 	if (text != COLOR_NONE)
 		textColorActif = text;
 }
+
+void Button::SetFont(LcdFont ft) {
+	font = ft;
+}
+
 
 /*---------------------------------------------------------------------------*/
 void Button::Draw() {

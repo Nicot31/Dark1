@@ -26,6 +26,7 @@
 class Frame {
 public:
 	Frame();
+	void Init(void);
 	void SetDefaultColor(int backColor, int borderColor, int textColor);
 	void SetDefaultBorderSize(int size);
 	void SetDefaultTextFont(LcdFont font);

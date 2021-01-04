@@ -20,6 +20,7 @@
 Item::Item() {
 	fEnable = true;
 	fActif = false;
+	ID = -1;
 }
 
 void Item::Enable(bool fEna) {

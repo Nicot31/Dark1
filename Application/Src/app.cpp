@@ -31,12 +31,20 @@ void Hello() {
 	//lcd.SetFontColor(LCD_COLOR_ORANGE);
 	//lcd.TextPutsCenterXY("Hello Thierry !");
 
-	btn = new Button(Point(50, 50), 70, 30, COLOR_BLUE2, COLOR_BLUE, 2, "Test", COLOR_BLACK, Font_11x18);
+	btn = new Button(1, Point(150, 50), 70, 30, "Go");
+	btn->SetFont(Font_11x18);
+	frame.Add(btn);
+
+	btn = new Button(2, Point(50, 50), 70, 30, "Test");
+	btn ->SetColor(COLOR_BLUE2, COLOR_BLUE, COLOR_BLACK);
 	btn->SetColorActif(COLOR_BLUE, COLOR_BLUE2, COLOR_NONE);
 	frame.Add(btn);
-	btn = new Button(Point(150, 50), 70, 30, COLOR_GRAY2, COLOR_GRAY, 2, "Go", COLOR_WHITE, Font_11x18);
-	btn->SetColorActif(COLOR_GRAY, COLOR_GRAY2, COLOR_NONE);
+
+	Button::SetDefaultColor(COLOR_GREEN, COLOR_GREEN2, COLOR_RED);
+	btn = new Button(3, Point(100, 100), 50, 25, "Cancel");
+	btn->SetFont(Font_7x10);
 	frame.Add(btn);
+
 	frame.Draw();
 }
 
@@ -47,6 +55,7 @@ void AppInit() {
 	lcd.Init();
 	lcd.Orientation(LCD_LANDSCAPE_1);
 	touch.Reset();
+	frame.Init();
 	Hello();
 }
 

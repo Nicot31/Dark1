@@ -1,17 +1,15 @@
- /**
-  ******************************************************************************
-  * File Name   : frame.cpp
-  * Description : 
-  *
-  * Created on  : 2 janv. 2021
-  *     Author  : Thierry
-  ******************************************************************************
-  */
-
+/**
+ ******************************************************************************
+ * File Name   : frame.cpp
+ * Description :
+ *
+ * Created on  : 2 janv. 2021
+ *     Author  : Thierry
+ ******************************************************************************
+ */
 
 /* Includes -----------------------------------------------------------------*/
 # include "frame.hpp"
-
 
 /* Constants ----------------------------------------------------------------*/
 
@@ -20,7 +18,6 @@ Frame frame = Frame();
 
 /* Methods ------------------------------------------------------------------*/
 
-
 /* Methods ------------------------------------------------------------------*/
 Frame::Frame() {
 	nbItems = 0;
@@ -28,20 +25,27 @@ Frame::Frame() {
 	currentItem = -1;
 }
 
+void Frame::Init() {
+	SetDefaultTextFont(Font_11x18);
+}
+
 void Frame::SetDefaultColor(int backClr, int borderClr, int textClr) {
-backColor = backClr;
-borderColor = borderClr;
-textColor = textClr;
+	backColor = backClr;
+	borderColor = borderClr;
+	textColor = textClr;
+	Button::SetDefaultColor(backClr, borderClr, textClr);
 }
 
 /*---------------------------------------------------------------------------*/
 void Frame::SetDefaultBorderSize(int size) {
-borderSize = size;
+	borderSize = size;
+	Button::SetDefaultBorderSize(size);
 }
 
 /*---------------------------------------------------------------------------*/
-void Frame::SetDefaultTextFont(LcdFont ft){
-font = ft;
+void Frame::SetDefaultTextFont(LcdFont ft) {
+	font = ft;
+	Button::SetDefaultFont(ft);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -55,11 +59,10 @@ void Frame::Draw() {
 	//for (auto it = items.begin(); it != items.end(); ++it) {
 	//	(*it)->Draw();
 	//}
-	for (int i=0; i<nbItems; i++) {
+	for (int i = 0; i < nbItems; i++) {
 		items[i]->Draw();
 	}
 }
-
 
 /*---------------------------------------------------------------------------*/
 void Frame::EventManagement(int event, Point pos) {
@@ -68,7 +71,7 @@ void Frame::EventManagement(int event, Point pos) {
 
 	switch (event) {
 	case EVT_PEN_DOWN:
-		for (int i=0; i<nbItems; i++) {
+		for (int i = 0; i < nbItems; i++) {
 			elt = items[i];
 			if (elt->rect.IsPointInside(pos)) {
 				currentItem = i;

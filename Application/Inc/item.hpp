@@ -30,6 +30,7 @@ public:
 	Rectangle rect;		// rectangle for the Item position
 	bool fEnable;
 	bool fActif;
+	int ID;
 };
 
 #endif /* INC_ITEM_HPP_ */

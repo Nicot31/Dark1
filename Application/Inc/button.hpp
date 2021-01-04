@@ -21,15 +21,23 @@
 /* Class ---------------------------------------------------------------------*/
 class Button: public Item {
 public:
-	Button(Point p, int width, int height, int backColor, int borderColor,
-			int borderSize = 1, const char *label = "", int textColor = COLOR_WHITE,
-			LcdFont font = Font_7x10);
+	Button(int id, Point p, int width, int height, const char *label = "");
 
-	void Draw(void);
+	static void SetDefaultColor(int back, int border, int text); 		// COLOR_NONE to keep unchanged
+	static void SetDefaultColorActif(int back, int border, int text); 	// COLOR_NONE to keep unchanged
+	static void SetDefaultFont(LcdFont ft);
+	static void SetDefaultBorderSize(int size);
+
 	void SetColor(int back, int border, int text); 		// COLOR_NONE to keep unchanged
 	void SetColorActif(int back, int border, int text); // COLOR_NONE to keep unchanged
-	bool Event(int evt, Point& pos);			// pos is relative to button. Return true if event is processed
+	void SetFont(LcdFont font);
 
+	bool Event(int evt, Point& pos);					// pos is relative to button. Return true if event is processed
+
+private:
+	void Draw(void);
+
+public:
 	// Attributes
 	int backColor;
 	int borderColor;
@@ -40,6 +48,17 @@ public:
 	int borderSize;
 	char *label;
 	LcdFont font;
+
+private:
+	static int defaultBackColor;
+	static int defaultBorderColor;
+	static int defaultTextColor;
+	static int defaultBackColorActif;
+	static int defaultBorderColorActif;
+	static int defaultTextColorActif;
+	static int defaultBorderSize;
+	static LcdFont defaultFont;
+
 };
 
 #endif /* INC_BUTTON_HPP_ */
