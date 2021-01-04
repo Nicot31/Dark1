@@ -15,9 +15,12 @@
 #include <vector>
 #include "item.hpp"
 #include "button.hpp"
+#include "util.hpp"
 
 /* Constants -----------------------------------------------------------------*/
-
+#define EVT_PEN_DOWN	1
+#define EVT_PEN_UP		2
+#define EVT_PEN_MOVE	3
 
 /* Class ---------------------------------------------------------------------*/
 class Frame {
@@ -28,6 +31,7 @@ public:
 	void SetDefaultTextFont(LcdFont font);
 	void Add(Item *item);
 	void Draw(void);
+	void EventManagement(int event, Point pos);
 
 	// Attributes
 	int backColor;
@@ -36,8 +40,11 @@ public:
 	int borderSize;
 	LcdFont font;
 
+private:
 	int nbItems;
 	std::vector<Item*> items;
+	bool capture;
+	int currentItem;
 
 };
 

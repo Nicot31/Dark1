@@ -20,6 +20,7 @@ public:
 	Point(int x=0, int y=0);
 	void Add(int width, int height);
 	Point Shift(int x, int y);
+	Point Shift(Point& offset);
 
 	// Attributes
 	int x;
@@ -32,9 +33,9 @@ class Rectangle {
 public:
 	Rectangle(void);
 	Rectangle(int x, int y, int width, int height);
-	Rectangle(Point p, int width, int height);
+	Rectangle(Point& p, int width, int height);
 	bool IsPointInside(int x, int y);
-	bool IsPointInside(Point p);
+	bool IsPointInside(Point& p);
 
 	// Attributes
 	Point p1;

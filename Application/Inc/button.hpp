@@ -26,14 +26,18 @@ public:
 			LcdFont font = Font_7x10);
 
 	void Draw(void);
-	void SetColor(int back, int border, int text); // COLOR_NONE to keep unchanged
+	void SetColor(int back, int border, int text); 		// COLOR_NONE to keep unchanged
+	void SetColorActif(int back, int border, int text); // COLOR_NONE to keep unchanged
+	bool Event(int evt, Point& pos);			// pos is relative to button. Return true if event is processed
 
 	// Attributes
-	Rectangle rect;
 	int backColor;
 	int borderColor;
-	int borderSize;
 	int textColor;
+	int backColorActif;
+	int borderColorActif;
+	int textColorActif;
+	int borderSize;
 	char *label;
 	LcdFont font;
 };

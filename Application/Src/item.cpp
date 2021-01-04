@@ -18,12 +18,34 @@
 
 /* Methods ------------------------------------------------------------------*/
 Item::Item() {
-	enable = true;
+	fEnable = true;
+	fActif = false;
 }
 
-void Item::Enable(bool ena) {
-	enable = ena;
+void Item::Enable(bool fEna) {
+	fEnable = fEna;
 }
+
+bool Item::IsEnable() {
+	return fEnable;
+}
+
+void Item::Activate(bool fAct) {
+	fActif = fAct;
+}
+
+bool Item::IsActif() {
+	return fActif;
+}
+
+void Item::Draw() {
+}
+
+bool Item::Event(int evt, Point& pos) {
+	return false;
+}
+
+
 
 
 /*---------------------------------------------------------------------------*/

@@ -32,6 +32,9 @@ Point Point::Shift(int sx, int sy) {
 	return Point(x + sx, y + sy);
 }
 
+Point Point::Shift(Point& offset) {
+	return Point(x + offset.x, y + offset.y);
+}
 
 /* Class --------------------------------------------------------------------*/
 
@@ -48,7 +51,7 @@ Rectangle::Rectangle(int x, int y, int w, int h) {
 	p2 = p1.Shift(width, height);
 }
 
-Rectangle::Rectangle(Point p, int w, int h) {
+Rectangle::Rectangle(Point& p, int w, int h) {
 	width = w;
 	height = h;
 	p1 = p;
@@ -61,7 +64,7 @@ bool Rectangle::IsPointInside(int x, int y) {
 	return false;
 }
 
-bool Rectangle::IsPointInside(Point p) {
+bool Rectangle::IsPointInside(Point& p) {
 	if ((p.x >= p1.x) && (p.x <= p2.x) && (p.y >= p1.y) && (p.y <= p2.y))
 		return true;
 	return false;
