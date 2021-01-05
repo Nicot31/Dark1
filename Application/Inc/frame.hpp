@@ -13,14 +13,12 @@
 #define INC_FRAME_HPP_
 
 #include <vector>
+#include "util.hpp"
 #include "item.hpp"
 #include "button.hpp"
-#include "util.hpp"
+#include "label.hpp"
 
 /* Constants -----------------------------------------------------------------*/
-#define EVT_PEN_DOWN	1
-#define EVT_PEN_UP		2
-#define EVT_PEN_MOVE	3
 
 /* Class ---------------------------------------------------------------------*/
 class Frame {

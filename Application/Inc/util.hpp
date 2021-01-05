@@ -14,6 +14,16 @@
 
 /* Constants -----------------------------------------------------------------*/
 
+// Events
+#define EVT_PEN_DOWN	1
+#define EVT_PEN_UP		2
+#define EVT_PEN_MOVE	3
+
+// Text indentation
+#define INDENT_LEFT		1
+#define INDENT_CENTER	2
+#define INDENT_RIGHT	3
+
 /* Class ---------------------------------------------------------------------*/
 class Point {
 public:

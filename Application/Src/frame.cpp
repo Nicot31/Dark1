@@ -34,18 +34,21 @@ void Frame::SetDefaultColor(int backClr, int borderClr, int textClr) {
 	borderColor = borderClr;
 	textColor = textClr;
 	Button::SetDefaultColor(backClr, borderClr, textClr);
+	Label::SetDefaultColor(backClr, borderClr, textClr);
 }
 
 /*---------------------------------------------------------------------------*/
 void Frame::SetDefaultBorderSize(int size) {
 	borderSize = size;
 	Button::SetDefaultBorderSize(size);
+	Label::SetDefaultBorderSize(size);
 }
 
 /*---------------------------------------------------------------------------*/
 void Frame::SetDefaultTextFont(LcdFont ft) {
 	font = ft;
 	Button::SetDefaultFont(ft);
+	Label::SetDefaultFont(ft);
 }
 
 /*---------------------------------------------------------------------------*/

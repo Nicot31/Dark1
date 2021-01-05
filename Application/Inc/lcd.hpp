@@ -74,6 +74,7 @@ public:
 	void IdleModeOff(void);
 	void Brightness(int val);
 	int  ComposeColor(uint8_t red, uint8_t green, uint8_t blue);
+
 	// text
 	void TextPutc(char c);
 	void TextPuts(const char *str);
@@ -81,7 +82,11 @@ public:
 	void TextPutsCenterX(int y, const char *str);
 	void TextPutsCenterY(int x, const char *str);
 	void TextPutsCenterXY(const char *str);
-	void TextPutsCenterRect(Rectangle rect, const char * str);
+
+	void PrintTextLeftRect(Rectangle rect, const char * str);
+	void PrintTextCenterRect(Rectangle rect, const char * str);
+	void PrintTextRightRect(Rectangle rect, const char * str);
+
 	// Draw
 	void DrawPixel(int x, int y, int color);
 	void Line(int x1, int y1, int x2, int y2, int color);

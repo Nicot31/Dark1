@@ -10,7 +10,7 @@
 
 /* Includes -----------------------------------------------------------------*/
 #include <string.h>
-#include "frame.hpp"
+//#include "frame.hpp"
 #include "button.hpp"
 
 /* Constants ----------------------------------------------------------------*/
@@ -37,7 +37,7 @@ Button::Button(int id, Point p, int width, int height, const char *txt) : Item()
 	textColor = defaultTextColor;
 	textColorActif = defaultTextColorActif;
 	borderSize = defaultBorderSize;
-	label = (char *)txt;
+	text = (char *)txt;
 	font = defaultFont;
 }
 
@@ -95,6 +95,10 @@ void Button::SetFont(LcdFont ft) {
 	font = ft;
 }
 
+void Button::SetText(const char *txt) {
+	text = txt;
+}
+
 
 /*---------------------------------------------------------------------------*/
 void Button::Draw() {
@@ -102,11 +106,11 @@ void Button::Draw() {
 	for (int i=0; i<borderSize; i++) {
 		lcd.Rect(rect.p1.x+i, rect.p1.y+i, rect.p2.x-i, rect.p2.y-i, (fActif) ? borderColorActif : borderColor);
 	}
-	if (strlen(label) > 0) {
+	if (strlen(text) > 0) {
 		lcd.SetFontColor((fActif) ? textColorActif : textColor);
 		lcd.SetBackColor((fActif) ? backColorActif : backColor);
 		lcd.SetFont(font);
-		lcd.TextPutsCenterRect(rect, label);
+		lcd.PrintTextCenterRect(rect, text);
 	}
 }
 

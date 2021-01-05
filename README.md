@@ -18,6 +18,7 @@ Name  | Description
 *LCD* | This class contains the LCD commands, the graphics functions and the text printing.
 *TOUCH* | Touch screen management with pen Up/Down detection and position. This module include the touch screen calibration.
 *CONFIG* | Allows to store and read value in the SRAM (RTC register). Usefull to keep touch screen configuration after power off.
-*FRAME* | Is the core module for the GUI. It manages the pen events and the items drawing
-*ITEM* | Abstract class for all items to draw on the screen
+*FRAME* | Is the core module for the GUI. It manages the pen events and the items drawing.
+*ITEM* | Abstract class for all items to draw on the screen.
 *BUTTON*| To display a button and detect the click.
+*LABEL* | To display a static text that can't be clicked.

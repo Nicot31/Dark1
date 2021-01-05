@@ -375,43 +375,56 @@ void LcdScreen::TextPutsAt(int x, int y, const char *str) {
 void LcdScreen::TextPutsCenterX(int y, const char *str) {
 	int x, dummy;
 
-	lcd.GetStringSize(str, &x, &dummy);
+	GetStringSize(str, &x, &dummy);
 	x = (lcd.width - x) / 2;
-	lcd.SetTextPos(x, y);
-	lcd.TextPuts(str);
+	TextPutsAt(x, y, str);
 }
 
 /*---------------------------------------------------------------------------*/
 void LcdScreen::TextPutsCenterY(int x, const char *str) {
 	int dummy, y;
 
-	lcd.GetStringSize(str, &dummy, &y);
+	GetStringSize(str, &dummy, &y);
 	y = (lcd.height - y) / 2;
-	lcd.SetTextPos(x, y);
-	lcd.TextPuts(str);
+	TextPutsAt(x, y, str);
 }
 
 /*---------------------------------------------------------------------------*/
 void LcdScreen::TextPutsCenterXY(const char *str) {
 	int x, y;
 
-	lcd.GetStringSize(str, &x, &y);
+	GetStringSize(str, &x, &y);
 	x = (lcd.width - x) / 2;
 	y = (lcd.height - y) / 2;
-	lcd.SetTextPos(x, y);
-	lcd.TextPuts(str);
+	TextPutsAt(x, y, str);
 }
 
 /*---------------------------------------------------------------------------*/
-void LcdScreen::TextPutsCenterRect(Rectangle rect, const char *str) {
+void LcdScreen::PrintTextLeftRect(Rectangle rect, const char *str) {
 	int x, y;
 
-	lcd.GetStringSize(str, &x, &y);
-	x = (rect.width - x) / 2 + rect.p1.x;
-	y = (rect.height - y) / 2 + rect.p1.y;
-	lcd.SetTextPos(x, y);
-	lcd.TextPuts(str);
+	GetStringSize(str, &x, &y);
+	x = rect.p1.x + 1;
+	y = (rect.height - y) / 2 + rect.p1.y + 1;
+	TextPutsAt(x, y, str);
+}
 
+void LcdScreen::PrintTextCenterRect(Rectangle rect, const char *str) {
+	int x, y;
+
+	GetStringSize(str, &x, &y);
+	x = (rect.width - x) / 2 + rect.p1.x;
+	y = (rect.height - y) / 2 + rect.p1.y + 1;
+	TextPutsAt(x, y, str);
+}
+
+void LcdScreen::PrintTextRightRect(Rectangle rect, const char *str) {
+	int x, y;
+
+	GetStringSize(str, &x, &y);
+	x = rect.p2.x - x;
+	y = (rect.height - y) / 2 + rect.p1.y + 1;
+	TextPutsAt(x, y, str);
 }
 
 /*---------------------------------------------------------------------------*/

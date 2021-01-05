@@ -12,8 +12,6 @@
 #include "lcd.hpp"
 #include "touch.hpp"
 #include "config.hpp"
-#include "util.hpp"
-#include "button.hpp"
 #include "frame.hpp"
 
 /*******************************************************************************
@@ -21,6 +19,7 @@
  ******************************************************************************/
 void Hello() {
 	Button* btn;
+	Label* lbl;
 
 	if (KeyTest(KEY1))
 		lcd.Calibrate();
@@ -40,10 +39,15 @@ void Hello() {
 	btn->SetColorActif(COLOR_BLUE, COLOR_BLUE2, COLOR_NONE);
 	frame.Add(btn);
 
-	Button::SetDefaultColor(COLOR_GREEN, COLOR_GREEN2, COLOR_RED);
-	btn = new Button(3, Point(100, 100), 50, 25, "Cancel");
-	btn->SetFont(Font_7x10);
-	frame.Add(btn);
+	Label::SetDefaultBorderSize(1);
+	lbl = new Label(-1, Point(10, 100), 100, 25, "(LEFT)");
+	frame.Add(lbl);
+	lbl = new Label(-1, Point(10, 130), 100, 25, "(CENTER)");
+	lbl->SetIndent(INDENT_CENTER);
+	frame.Add(lbl);
+	lbl = new Label(-1, Point(10, 160), 100, 25, "(RIGHT)");
+	lbl->SetIndent(INDENT_RIGHT);
+	frame.Add(lbl);
 
 	frame.Draw();
 }
