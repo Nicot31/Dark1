@@ -39,6 +39,7 @@ Button::Button(int id, Point p, int width, int height, const char *txt) : Item()
 	borderSize = defaultBorderSize;
 	text = (char *)txt;
 	font = defaultFont;
+	pCallBack = nullptr;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -125,10 +126,16 @@ bool Button::Event(int evt, Point& pos) {
 	case EVT_PEN_DOWN:
 		Activate(true);
 		Draw();
+		if (pCallBack != nullptr) {
+			(*pCallBack)(BTN_DOWN, ID);
+		}
 		break;
 	case EVT_PEN_UP:
 		Activate(false);
 		Draw();
+		if (pCallBack != nullptr) {
+			(*pCallBack)(BTN_UP, ID);
+		}
 		break;
 	case EVT_PEN_MOVE:
 		break;
@@ -136,3 +143,9 @@ bool Button::Event(int evt, Point& pos) {
 
 	return true;
 }
+
+/*---------------------------------------------------------------------------*/
+void Button::SetAction(void (*fct)(int event, int id)) {
+	pCallBack = fct;
+}
+

@@ -19,10 +19,16 @@
 #define EVT_PEN_UP		2
 #define EVT_PEN_MOVE	3
 
+// Button Events
+#define BTN_DOWN		10
+#define BTN_UP			11
+
+
 // Text indentation
 #define INDENT_LEFT		1
 #define INDENT_CENTER	2
 #define INDENT_RIGHT	3
+
 
 /* Class ---------------------------------------------------------------------*/
 class Point {

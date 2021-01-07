@@ -33,6 +33,8 @@ public:
 	void SetFont(LcdFont font);							// The text font
 	void SetText(const char *txt);						// Change the text
 
+	void SetAction(void (*CallBack)(int event, int id));
+
 	bool Event(int evt, Point& pos);					// pos is relative to button coordinates. Return true if event is processed
 
 private:
@@ -51,6 +53,7 @@ public:
 	LcdFont font;
 
 private:
+	void (*pCallBack)(int event, int id);
 	static int defaultBackColor;
 	static int defaultBorderColor;
 	static int defaultTextColor;

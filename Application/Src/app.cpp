@@ -14,6 +14,13 @@
 #include "config.hpp"
 #include "frame.hpp"
 
+void Action(int evt, int ID) {
+	char sBuf[30];
+	sprintf(sBuf, "%d - %d", evt, ID);
+	lcd.TextPutsAt(10, 200, sBuf);
+}
+
+
 /*******************************************************************************
  * Say Hello :-)
  ******************************************************************************/
@@ -37,6 +44,7 @@ void Hello() {
 	btn = new Button(2, Point(50, 50), 70, 30, "Test");
 	btn ->SetColor(COLOR_BLUE2, COLOR_BLUE, COLOR_BLACK);
 	btn->SetColorActif(COLOR_BLUE, COLOR_BLUE2, COLOR_NONE);
+	btn->SetAction(Action);
 	frame.Add(btn);
 
 	Label::SetDefaultBorderSize(1);
