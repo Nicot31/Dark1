@@ -17,6 +17,7 @@
 #include "item.hpp"
 #include "button.hpp"
 #include "label.hpp"
+#include "chg_value.hpp"
 
 /* Constants -----------------------------------------------------------------*/
 

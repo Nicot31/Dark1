@@ -27,12 +27,12 @@ class Label: public Item {
 public:
 	Label(int id, Point p, int width, int height, const char *txt = "");
 
-	static void SetDefaultColor(int back, int border, int text); 		// Default color for all instances. COLOR_NONE to keep unchanged
+	static void SetDefaultColors(int back, int border, int text); 		// Default color for all instances. COLOR_NONE to keep unchanged
 	static void SetDefaultFont(LcdFont ft);								// Default font for all instances.
 	static void SetDefaultBorderSize(int size);							// Default border size in pixels for all instances
 	static void SetDefaultIndent(int indent);							// Default indentation for all instances
 
-	void SetColor(int back, int border, int text); 		// The button colors, COLOR_NONE to keep unchanged
+	void SetColors(int back, int border, int text); 		// The button colors, COLOR_NONE to keep unchanged
 	void SetFont(LcdFont font);							// The text font
 	void SetBorderSize(int size);						// Default border size in pixels for all instances
 	void SetIndent(int indent);							// Default indentation for all instances
@@ -40,7 +40,6 @@ public:
 
 	bool Event(int evt, Point& pos);					// pos is relative to button coordinates. Return true if event is processed
 
-private:
 	void Draw(void);
 
 public:
@@ -50,7 +49,7 @@ public:
 	int textColor;
 	int borderSize;
 	int indent;
-	const char *text;
+	char text[100];
 	LcdFont font;
 
 private:

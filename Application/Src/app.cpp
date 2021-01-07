@@ -26,7 +26,8 @@ void Action(int evt, int ID) {
  ******************************************************************************/
 void Hello() {
 	Button* btn;
-	Label* lbl;
+	//Label* lbl;
+	ChgValue* chg;
 
 	if (KeyTest(KEY1))
 		lcd.Calibrate();
@@ -37,25 +38,31 @@ void Hello() {
 	//lcd.SetFontColor(LCD_COLOR_ORANGE);
 	//lcd.TextPutsCenterXY("Hello Thierry !");
 
-	btn = new Button(1, Point(150, 50), 70, 30, "Go");
-	btn->SetFont(Font_11x18);
-	frame.Add(btn);
+	//btn = new Button(1, Point(150, 50), 70, 30, "Go");
+	//btn->SetFont(Font_11x18);
+	//frame.Add(btn);
 
 	btn = new Button(2, Point(50, 50), 70, 30, "Test");
-	btn ->SetColor(COLOR_BLUE2, COLOR_BLUE, COLOR_BLACK);
-	btn->SetColorActif(COLOR_BLUE, COLOR_BLUE2, COLOR_NONE);
+	btn ->SetColors(COLOR_BLUE2, COLOR_BLUE, COLOR_BLACK);
+	btn->SetColorsActif(COLOR_BLUE, COLOR_BLUE2, COLOR_NONE);
 	btn->SetAction(Action);
 	frame.Add(btn);
 
-	Label::SetDefaultBorderSize(1);
-	lbl = new Label(-1, Point(10, 100), 100, 25, "(LEFT)");
-	frame.Add(lbl);
-	lbl = new Label(-1, Point(10, 130), 100, 25, "(CENTER)");
-	lbl->SetIndent(INDENT_CENTER);
-	frame.Add(lbl);
-	lbl = new Label(-1, Point(10, 160), 100, 25, "(RIGHT)");
-	lbl->SetIndent(INDENT_RIGHT);
-	frame.Add(lbl);
+	//Label::SetDefaultBorderSize(1);
+	//lbl = new Label(-1, Point(10, 100), 100, 25, "(LEFT)");
+	//frame.Add(lbl);
+	//lbl = new Label(-1, Point(10, 130), 100, 25, "(CENTER)");
+	//lbl->SetIndent(INDENT_CENTER);
+	//frame.Add(lbl);
+	//lbl = new Label(-1, Point(10, 160), 100, 25, "(RIGHT)");
+	//lbl->SetIndent(INDENT_RIGHT);
+	//frame.Add(lbl);
+
+	chg = new ChgValue(5, Point(10,10), 100, 20);
+	chg->SetFont(Font_7x10);
+	chg->SetRange(20, 210, 10);
+	chg->SetValue(13);
+	frame.Add(chg);
 
 	frame.Draw();
 }

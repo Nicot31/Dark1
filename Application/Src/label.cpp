@@ -33,12 +33,12 @@ Label::Label(int id, Point p, int width, int height, const char *txt) : Item() {
 	textColor = defaultTextColor;
 	borderSize = defaultBorderSize;
 	indent = defaultIndent;
-	text = (char *)txt;
+	text[0] = 0;
 	font = defaultFont;
 }
 
 /*---------------------------------------------------------------------------*/
-void Label::SetDefaultColor(int back, int border, int text) {
+void Label::SetDefaultColors(int back, int border, int text) {
 	// COLOR_NONE to keep unchanged
 	if (back != COLOR_NONE)
 		defaultBackColor = back;
@@ -60,7 +60,7 @@ void Label::SetDefaultFont(LcdFont ft) {
 }
 
 /*---------------------------------------------------------------------------*/
-void Label::SetColor(int back, int border, int text) {
+void Label::SetColors(int back, int border, int text) {
 	// COLOR_NONE to keep unchanged
 	if (back != COLOR_NONE)
 		backColor = back;
@@ -83,7 +83,8 @@ void Label::SetIndent(int ind) {
 }
 
 void Label::SetText(const char *txt) {
-	text = txt;
+	strncpy(text, txt, 99);
+	text[99] = 0;
 }
 
 /*---------------------------------------------------------------------------*/

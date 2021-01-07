@@ -117,6 +117,23 @@ LcdScreen::LcdScreen(int orientation) {
 	SetOrientation(orientation);
 	SetColors(COLOR_WHITE, COLOR_BLACK);
 	SetFont(Font_7x10);
+	saveFontColor = -1;
+}
+
+void LcdScreen::PushContext() {
+	saveFont = font;
+	saveFontColor = fontColor;
+	saveBackgroudColor = backgroundColor;
+}
+
+
+void LcdScreen::PopContext() {
+	if (saveFontColor >= 0) {
+		font = saveFont;
+		fontColor = saveFontColor;
+		backgroundColor = saveBackgroudColor;
+		saveFontColor = -1;
+	}
 }
 
 /*---------------------------------------------------------------------------*/
@@ -172,14 +189,11 @@ int LcdScreen::GetBackColor() {
 	return backgroundColor;
 }
 
-void LcdScreen::SetFont(LcdFont font) {
-	fontData = font.data;
-	fontWidth = font.width;
-	fontHeight = font.height;
+void LcdScreen::SetFont(LcdFont ft) {
+	font= ft;
 }
 
 LcdFont LcdScreen::GetFont(void) {
-	LcdFont font = LcdFont(fontWidth, fontHeight, fontData);
 	return font;
 }
 
@@ -320,21 +334,21 @@ void LcdScreen::TextPutc(char c) {
 		return;
 
 	// Test if we are at the end of the line
-	if ((txtAreaPosX + fontWidth) > txtAreaX2) {
+	if ((txtAreaPosX + font.width) > txtAreaX2) {
 		txtAreaPosX = txtAreaX1;
-		txtAreaPosY += fontHeight;
+		txtAreaPosY += font.height;
 	}
 
 	// Set the rectangle frame to draw
-	SetFrame(txtAreaPosX, txtAreaPosY, txtAreaPosX + fontWidth - 1,
-			txtAreaPosY + fontHeight - 1);
+	SetFrame(txtAreaPosX, txtAreaPosY, txtAreaPosX + font.width - 1,
+			txtAreaPosY + font.height - 1);
 
 	// Draw char data
-	pData = (uint16_t*) fontData + (fontHeight * c);
+	pData = (uint16_t*) font.data + (font.height * c);
 	LCD_CMD = LCD_MEMORY_WRITE;
-		for (i = 0; i < fontHeight; i++) {
+		for (i = 0; i < font.height; i++) {
 			Data = *pData++;
-			for (j = 0; j < fontWidth; j++) {
+			for (j = 0; j < font.width; j++) {
 				if (Data & 0x8000) {
 					LCD_PARAM = (uint16_t) fontColor;
 				} else {
@@ -345,7 +359,7 @@ void LcdScreen::TextPutc(char c) {
 		} // End for i
 
 	// Update Text Pointer
-	txtAreaPosX += fontWidth;
+	txtAreaPosX += font.width;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -353,7 +367,7 @@ void LcdScreen::TextPuts(const char *str) {
 	while (*str) {
 		/* New line */
 		if (*str == '\n') {
-			txtAreaPosY += fontHeight;
+			txtAreaPosY += font.height;
 			txtAreaPosX = txtAreaX1;
 			str++;
 		} else if (*str == '\r') {
@@ -429,8 +443,8 @@ void LcdScreen::PrintTextRightRect(Rectangle rect, const char *str) {
 
 /*---------------------------------------------------------------------------*/
 void LcdScreen::GetStringSize(const char *str, int *width, int *height) {
-	*height = fontHeight;
-	*width = fontWidth * strlen(str);
+	*height = font.height;
+	*width = font.width * strlen(str);
 }
 
 /*---------------------------------------------------------------------------*/

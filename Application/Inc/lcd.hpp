@@ -59,6 +59,8 @@ public:
 	int  GetBackColor(void);
 	void SetFont(LcdFont font);
 	LcdFont GetFont(void);
+	void PushContext();		// Save the colors and the font
+	void PopContext();		// Restore the colors and the font
 	void SetTextArea(int x1, int y1, int x2, int y2);
 	void SetTextPos(int x, int y);
 	void GetStringSize(const char* str, int *width, int *hight);
@@ -124,9 +126,15 @@ public:
 	// font
 	int fontColor;
 	int backgroundColor;
-	const uint16_t *fontData; // Font information
-	int	fontWidth;
-	int	fontHeight;
+	LcdFont font;
+	//const uint16_t *fontData; // Font information
+	//int	fontWidth;
+	//int	fontHeight;
+
+	// Backup
+	int saveFontColor;
+	int saveBackgroudColor;
+	LcdFont saveFont;
 
 	// text
 	int txtAreaX1;		// Text area definition

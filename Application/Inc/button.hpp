@@ -23,21 +23,21 @@ class Button: public Item {
 public:
 	Button(int id, Point p, int width, int height, const char *txt = "");
 
-	static void SetDefaultColor(int back, int border, int text); 		// Default color for all instances. COLOR_NONE to keep unchanged
-	static void SetDefaultColorActif(int back, int border, int text); 	// Default color for all instances. COLOR_NONE to keep unchanged
+	static void SetDefaultColors(int back, int border, int text); 		// Default color for all instances. COLOR_NONE to keep unchanged
+	static void SetDefaultColorsActif(int back, int border, int text); 	// Default color for all instances. COLOR_NONE to keep unchanged
 	static void SetDefaultFont(LcdFont ft);								// Default font for all instances.
 	static void SetDefaultBorderSize(int size);							// Default border size in pixels for all instances
 
-	void SetColor(int back, int border, int text); 		// The button colors, COLOR_NONE to keep unchanged
-	void SetColorActif(int back, int border, int text); // The button color when pushed, COLOR_NONE to keep unchanged
+	void SetColors(int back, int border, int text); 		// The button colors, COLOR_NONE to keep unchanged
+	void SetColorsActif(int back, int border, int text); // The button color when pushed, COLOR_NONE to keep unchanged
 	void SetFont(LcdFont font);							// The text font
 	void SetText(const char *txt);						// Change the text
+	void SetBorderSize(int size);
 
 	void SetAction(void (*CallBack)(int event, int id));
 
 	bool Event(int evt, Point& pos);					// pos is relative to button coordinates. Return true if event is processed
 
-private:
 	void Draw(void);
 
 public:
@@ -49,7 +49,7 @@ public:
 	int borderColorActif;
 	int textColorActif;
 	int borderSize;
-	const char *text;
+	char text[100];
 	LcdFont font;
 
 private:

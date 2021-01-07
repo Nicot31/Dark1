@@ -22,3 +22,4 @@ Name  | Description
 *ITEM* | Abstract class for all items to draw on the screen.
 *BUTTON*| To display a button and detect the click.
 *LABEL* | To display a static text that can't be clicked.
+*CHGVALUE* | A control to change a value. It is composed with 2 buttons "<" and ">" with an integer value between.

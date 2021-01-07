@@ -37,13 +37,13 @@ Button::Button(int id, Point p, int width, int height, const char *txt) : Item()
 	textColor = defaultTextColor;
 	textColorActif = defaultTextColorActif;
 	borderSize = defaultBorderSize;
-	text = (char *)txt;
+	SetText(txt);
 	font = defaultFont;
 	pCallBack = nullptr;
 }
 
 /*---------------------------------------------------------------------------*/
-void Button::SetDefaultColor(int back, int border, int text) {
+void Button::SetDefaultColors(int back, int border, int text) {
 	// COLOR_NONE to keep unchanged
 	if (back != COLOR_NONE)
 		defaultBackColor = back;
@@ -53,7 +53,7 @@ void Button::SetDefaultColor(int back, int border, int text) {
 		defaultTextColor = text;
 }
 
-void Button::SetDefaultColorActif(int back, int border, int text) {
+void Button::SetDefaultColorsActif(int back, int border, int text) {
 	// COLOR_NONE to keep unchanged
 	if (back != COLOR_NONE)
 		defaultBackColorActif = back;
@@ -72,7 +72,7 @@ void Button::SetDefaultFont(LcdFont ft) {
 }
 
 /*---------------------------------------------------------------------------*/
-void Button::SetColor(int back, int border, int text) {
+void Button::SetColors(int back, int border, int text) {
 	// COLOR_NONE to keep unchanged
 	if (back != COLOR_NONE)
 		backColor = back;
@@ -82,7 +82,7 @@ void Button::SetColor(int back, int border, int text) {
 		textColor = text;
 }
 
-void Button::SetColorActif(int back, int border, int text) {
+void Button::SetColorsActif(int back, int border, int text) {
 	// COLOR_NONE to keep unchanged
 	if (back != COLOR_NONE)
 		backColorActif = back;
@@ -92,12 +92,17 @@ void Button::SetColorActif(int back, int border, int text) {
 		textColorActif = text;
 }
 
+void Button::SetBorderSize(int size) {
+	borderSize = size;
+}
+
 void Button::SetFont(LcdFont ft) {
 	font = ft;
 }
 
 void Button::SetText(const char *txt) {
-	text = txt;
+	strncpy(text, txt, 99);
+	text[99] = 0;
 }
 
 
@@ -108,10 +113,11 @@ void Button::Draw() {
 		lcd.Rect(rect.p1.x+i, rect.p1.y+i, rect.p2.x-i, rect.p2.y-i, (fActif) ? borderColorActif : borderColor);
 	}
 	if (strlen(text) > 0) {
-		lcd.SetFontColor((fActif) ? textColorActif : textColor);
-		lcd.SetBackColor((fActif) ? backColorActif : backColor);
+		lcd.PushContext();
+		lcd.SetColors((fActif) ? textColorActif : textColor, (fActif) ? backColorActif : backColor);
 		lcd.SetFont(font);
 		lcd.PrintTextCenterRect(rect, text);
+		lcd.PopContext();
 	}
 }
 

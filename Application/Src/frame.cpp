@@ -33,8 +33,8 @@ void Frame::SetDefaultColor(int backClr, int borderClr, int textClr) {
 	backColor = backClr;
 	borderColor = borderClr;
 	textColor = textClr;
-	Button::SetDefaultColor(backClr, borderClr, textClr);
-	Label::SetDefaultColor(backClr, borderClr, textClr);
+	Button::SetDefaultColors(backClr, borderClr, textClr);
+	Label::SetDefaultColors(backClr, borderClr, textClr);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -88,6 +88,8 @@ void Frame::EventManagement(int event, Point pos) {
 		break;
 	case EVT_PEN_UP:
 		if (currentItem >= 0) {
+			pos.x -= items[currentItem]->rect.p1.x;
+			pos.y -= items[currentItem]->rect.p1.y;
 			items[currentItem]->Event(event, pos);
 			currentItem = -1;
 		}
